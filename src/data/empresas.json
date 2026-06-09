@@ -1,0 +1,47 @@
+[
+  {
+    "id": "emp-001",
+    "nome": "Termas Serra Verde",
+    "cidade": "serra-negra",
+    "area": "turismo",
+    "porte": "Media",
+    "resumo": "Resort termal com 84 apartamentos, restaurante regional e spa. Operacao 7 dias.",
+    "plano": "premium"
+  },
+  {
+    "id": "emp-002",
+    "nome": "Cooperativa Holambra Flores",
+    "cidade": "holambra",
+    "area": "agro",
+    "porte": "Grande",
+    "resumo": "Cooperativa de produtores de flores e plantas ornamentais. Logistica regional.",
+    "plano": "destaque"
+  },
+  {
+    "id": "emp-003",
+    "nome": "Industrias Pedreira Ceramica",
+    "cidade": "pedreira",
+    "area": "industria",
+    "porte": "Media",
+    "resumo": "Fabrica de porcelana e ceramica decorativa. 180 funcionarios em dois turnos.",
+    "plano": "basico"
+  },
+  {
+    "id": "emp-004",
+    "nome": "Hospital Sao Lucas Amparo",
+    "cidade": "amparo",
+    "area": "saude",
+    "porte": "Media",
+    "resumo": "Hospital geral com pronto-socorro 24h, maternidade e clinicas de especialidades.",
+    "plano": "destaque"
+  },
+  {
+    "id": "emp-005",
+    "nome": "Mercado Central Jaguariuna",
+    "cidade": "jaguariuna",
+    "area": "comercio",
+    "porte": "Pequena",
+    "resumo": "Rede regional de mercados de bairro. 4 unidades no recorte.",
+    "plano": "basico"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  { "slug": "amparo", "nome": "Amparo", "uf": "SP" },
+  { "slug": "holambra", "nome": "Holambra", "uf": "SP" },
+  { "slug": "jaguariuna", "nome": "Jaguariuna", "uf": "SP" },
+  { "slug": "serra-negra", "nome": "Serra Negra", "uf": "SP" },
+  { "slug": "aguas-de-lindoia", "nome": "Aguas de Lindoia", "uf": "SP" },
+  { "slug": "lindoia", "nome": "Lindoia", "uf": "SP" },
+  { "slug": "socorro", "nome": "Socorro", "uf": "SP" },
+  { "slug": "monte-alegre-do-sul", "nome": "Monte Alegre do Sul", "uf": "SP" },
+  { "slug": "pedreira", "nome": "Pedreira", "uf": "SP" }
+]

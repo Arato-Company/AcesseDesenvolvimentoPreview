@@ -1,0 +1,79 @@
+/* =====================================================
+   ACESSE DESENVOLVIMENTO — TOKENS COMPARTILHADOS
+   Fonte: vault `Telas/_shared/tokens.css` (Etapa 9).
+   Fonts carregadas via `next/font/google` em layout.tsx —
+   por isso o @import do Google Fonts foi removido aqui.
+   ===================================================== */
+
+/* -----------------------------------------------------
+   1. TOKENS — variáveis do Design System
+   ----------------------------------------------------- */
+:root {
+  --c-navy: #0e2a47;
+  --c-navy-deep: #081c30;
+  --c-navy-soft: #1b3a5c;
+  --c-gold: #c9a24a;
+  --c-gold-light: #e0c076;
+  --c-gold-deep: #a6822f;
+  --c-offwhite: #fbfaf7;
+  --c-paper: #f4f1ea;
+  --c-line: #e5dfd2;
+  --c-ink-1: #0e2a47;
+  --c-ink-2: #4a5a6e;
+  --c-ink-3: #8a95a3;
+  --c-success: #3d7a5d;
+  --c-warning: #c7944c;
+  --c-danger: #b14a3f;
+
+  /* Fontes injetadas via next/font (variaveis CSS):
+     --font-fraunces, --font-inter, --font-jetbrains-mono.
+     Aliases mantidos para compat com utilitarios herdados do tokens. */
+  --f-display: var(--font-fraunces), Georgia, serif;
+  --f-body: var(--font-inter), -apple-system, system-ui, sans-serif;
+  --f-mono: var(--font-jetbrains-mono), "Courier New", monospace;
+
+  --fs-2xs: 0.6875rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;
+  --fs-3xl: 2.25rem;
+  --fs-4xl: 3rem;
+  --fs-5xl: 4rem;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+  --s-24: 96px;
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 24px;
+  --r-pill: 999px;
+
+  --sh-1: 0 1px 2px rgba(14, 42, 71, 0.06);
+  --sh-2: 0 4px 12px rgba(14, 42, 71, 0.08);
+  --sh-3: 0 8px 24px rgba(14, 42, 71, 0.1);
+  --sh-4: 0 16px 48px rgba(14, 42, 71, 0.14);
+  --sh-gold: 0 8px 24px rgba(201, 162, 74, 0.2);
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --t-fast: 150ms;
+  --t-base: 250ms;
+  --t-slow: 400ms;
+
+  --sidebar-w: 240px;
+  --topbar-h: 64px;
+}

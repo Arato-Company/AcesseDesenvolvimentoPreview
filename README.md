@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Acesse Desenvolvimento — Frontend v0
 
-## Getting Started
+SaaS de empregabilidade regional pro **Circuito das Aguas paulista** (Amparo, Holambra, Jaguariuna, Serra Negra, Aguas de Lindoia, Lindoia, Socorro, Monte Alegre do Sul, Pedreira).
 
-First, run the development server:
+Esta v0 e **estatica + sem backend** — scaffold navegavel cobrindo as 20 rotas mapeadas no Stitch (Etapa 9) com mock data local. UI completa entra na proxima rodada.
+
+## Como rodar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # localhost:3000
+npm run build    # gera /out (static export)
+npm run lint     # ESLint
+npm run format   # Prettier
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 15** (App Router, `output: "export"`)
+- **React 19**
+- **TypeScript** strict
+- **Tailwind v3** consumindo CSS vars de `src/styles/tokens.css`
+- **ESLint** (`next/core-web-vitals` + `next/typescript`) + **Prettier**
+- **next/font/google** para Fraunces, Inter e JetBrains Mono
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Sem backend, sem API routes, sem deploy ainda.
 
-## Learn More
+## Estrutura
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/
+    layout.tsx         # fontes via next/font + metadata
+    page.tsx           # home / galeria de rotas
+    globals.css        # tailwind + tokens
+    login/
+    feed/
+    candidato/{cadastro,dashboard,curriculo,planos}/
+    empresa/{dashboard,cadastro,vitrine,favoritos,planos,vaga/nova,candidato/[id]}/
+    admin/{,curadoria,candidatos,empresas,posts,reembolsos,comunicacao}/
+  components/          # Header, Footer, Container, PageShell
+  data/                # cidades, areas, vagas, candidatos, empresas, planos, rotas
+  styles/tokens.css    # tokens canonicos do Design System
+  types/               # tipos do dominio (sem enum — convencao TS strict)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Mapa de rotas (20)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Publicas**
+- `/` — galeria de rotas (home)
+- `/login` — entrada dual (mobile responsivo)
+- `/feed` — feed regional (mobile responsivo)
 
-## Deploy on Vercel
+**Candidato (mobile-first)**
+- `/candidato/cadastro`
+- `/candidato/dashboard`
+- `/candidato/curriculo`
+- `/candidato/planos`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Empresa**
+- `/empresa/dashboard`
+- `/empresa/cadastro`
+- `/empresa/vitrine`
+- `/empresa/candidato/[id]`
+- `/empresa/vaga/nova`
+- `/empresa/favoritos`
+- `/empresa/planos`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Admin (concierge)**
+- `/admin`
+- `/admin/curadoria`
+- `/admin/candidatos`
+- `/admin/empresas`
+- `/admin/posts`
+- `/admin/reembolsos`
+- `/admin/comunicacao`
+
+## Design System
+
+Tokens canonicos em `src/styles/tokens.css` — paleta Navy/Gold, fontes Fraunces/Inter/JetBrains Mono, escala 4px, raios, sombras com tom navy. Tailwind consumindo CSS vars via `tailwind.config.ts`.
+
+Referencia completa no vault: `Clientes/Luciana/Acesse Desenvolvimento/Design System.md`.
+
+## Hard constraints
+
+- Marca neutra (Luciana nao aparece como rosto)
+- Regional-only (somente Circuito das Aguas no mock data)
+- Bilateral (candidato + empresa visiveis no scaffold)
+- Sem chat interno (contato = WhatsApp/email)
+- LGPD: nada persistido na v0

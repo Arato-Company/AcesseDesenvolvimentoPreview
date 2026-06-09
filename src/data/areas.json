@@ -1,0 +1,27 @@
+[
+  {
+    "slug": "turismo",
+    "nome": "Turismo",
+    "descricao": "Hotelaria, restaurantes, eventos e atendimento das estancias hidromineralis."
+  },
+  {
+    "slug": "comercio",
+    "nome": "Comercio",
+    "descricao": "Lojas de rua, mercados, atendimento e back office regional."
+  },
+  {
+    "slug": "industria",
+    "nome": "Industria",
+    "descricao": "Polo industrial de Jaguariuna, Amparo e Pedreira (eletro, alimentos, ceramica)."
+  },
+  {
+    "slug": "saude",
+    "nome": "Saude",
+    "descricao": "Hospitais, clinicas e cuidado domiciliar do recorte regional."
+  },
+  {
+    "slug": "agro",
+    "nome": "Agro",
+    "descricao": "Floricultura de Holambra, cafe, hortifrutis e cadeia agroindustrial."
+  }
+]

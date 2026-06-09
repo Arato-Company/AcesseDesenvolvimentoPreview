@@ -1,0 +1,77 @@
+{
+  "candidato": [
+    {
+      "id": "start",
+      "nome": "Cadastro Start",
+      "preco": 19.9,
+      "periodoMeses": 5,
+      "destaques": [
+        "Acesso basico a plataforma",
+        "Cadastro de perfil",
+        "Curriculo para impressao",
+        "Visualizacao de vagas e candidatura"
+      ]
+    },
+    {
+      "id": "destaque",
+      "nome": "Cadastro Destaque",
+      "preco": 29.9,
+      "periodoMeses": 5,
+      "destaques": [
+        "Tudo do Start",
+        "Curriculo em PDF profissional",
+        "Gestao de perfil e status",
+        "Recurso para chamar atencao de empresas"
+      ],
+      "recomendado": true
+    },
+    {
+      "id": "premium",
+      "nome": "Cadastro Premium",
+      "preco": 39.9,
+      "periodoMeses": 5,
+      "destaques": [
+        "Tudo do Destaque",
+        "Vitrine de visibilidade",
+        "Prioridade nas oportunidades",
+        "Perfil otimizado para recolocacao"
+      ]
+    }
+  ],
+  "empresa": [
+    {
+      "id": "basico",
+      "nome": "Acesso Basico",
+      "preco": 49.9,
+      "periodoMeses": 1,
+      "destaques": [
+        "Vitrine de curriculos",
+        "Consulta de candidatos",
+        "Contato direto com candidatos"
+      ]
+    },
+    {
+      "id": "destaque",
+      "nome": "Acesso Destaque",
+      "preco": 99.9,
+      "periodoMeses": 1,
+      "destaques": [
+        "Tudo do Basico",
+        "Divulgacao de ate 10 vagas",
+        "Recebimento de curriculos indicados"
+      ]
+    },
+    {
+      "id": "premium",
+      "nome": "Acesso Premium",
+      "preco": 197.9,
+      "periodoMeses": 1,
+      "destaques": [
+        "Tudo do Destaque",
+        "Divulgacao ilimitada de vagas",
+        "Triagem e indicacao dos melhores perfis (concierge)"
+      ],
+      "recomendado": true
+    }
+  ]
+}
