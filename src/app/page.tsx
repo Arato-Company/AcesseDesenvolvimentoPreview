@@ -78,7 +78,7 @@ export default function HomePage() {
                 style={{ aspectRatio: "4 / 5" }}
               >
                 <Image
-                  src="/hero-foto-solo.png"
+                  src="/hero-foto-solo.webp"
                   alt="Profissional em ambiente regional do Circuito das Aguas"
                   fill
                   className="object-cover"

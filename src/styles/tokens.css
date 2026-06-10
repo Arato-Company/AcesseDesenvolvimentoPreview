@@ -1317,12 +1317,186 @@ em {
     grid-template-areas: "topbar" "main";
   }
   .app-sidebar {
-    display: none;
+    /* Drawer mode: hidden by default, fixed overlay when open. */
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.24s ease;
+    z-index: 60;
+    box-shadow: var(--shadow-5);
+  }
+  .app-sidebar-brand-text,
+  .app-sidebar-nav a span:not(.icon),
+  .app-sidebar-cities {
+    display: revert;
+  }
+  .app-sidebar-nav a {
+    justify-content: flex-start;
+    padding: var(--s-3) var(--s-4);
+  }
+  .app-shell[data-drawer-open="true"] .app-sidebar {
+    transform: translateX(0);
   }
   .app-main {
     padding: var(--s-6);
   }
   .app-topbar {
     padding: 0 var(--s-4);
+  }
+  .app-drawer-toggle {
+    display: inline-flex;
+  }
+}
+
+/* -----------------------------------------------------
+   17b. Mobile drawer (overlay + toggle)
+   ----------------------------------------------------- */
+.app-drawer-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-line);
+  background: var(--c-offwhite);
+  color: var(--c-navy);
+  margin-right: var(--s-3);
+  cursor: pointer;
+  transition: background 0.16s ease;
+}
+.app-drawer-toggle:hover {
+  background: var(--c-paper);
+}
+.app-drawer-toggle:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
+}
+.app-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(2px);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.app-drawer-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* -----------------------------------------------------
+   18. Timeline (perfil candidato)
+   ----------------------------------------------------- */
+.timeline {
+  position: relative;
+  padding-left: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--c-gold) 0%,
+    var(--c-line) 100%
+  );
+  border-radius: 1px;
+}
+.timeline-item {
+  position: relative;
+}
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--s-6) * -1 + 1px);
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c-offwhite);
+  border: 2px solid var(--c-gold);
+  box-shadow: 0 0 0 3px var(--c-offwhite);
+}
+.timeline-item .timeline-period {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--c-gold-deep);
+  margin-bottom: var(--s-1);
+}
+.timeline-item .timeline-role {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--c-navy);
+  margin-bottom: var(--s-1);
+}
+.timeline-item .timeline-company {
+  font-size: var(--text-sm);
+  color: var(--c-ink-2);
+  margin-bottom: var(--s-2);
+}
+.timeline-item .timeline-detail {
+  font-size: var(--text-sm);
+  color: var(--c-ink-2);
+  line-height: 1.6;
+}
+
+/* -----------------------------------------------------
+   19. Print (currículo)
+   ----------------------------------------------------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+  body {
+    background: white !important;
+  }
+  .bottom-nav,
+  .mobile-header,
+  .no-print,
+  .phone-frame {
+    /* phone-frame frame goes flat; bottom-nav / header hidden */
+  }
+  .bottom-nav,
+  .mobile-header,
+  .no-print {
+    display: none !important;
+  }
+  .phone-frame {
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    background: white !important;
+  }
+  .cv-page {
+    max-width: 100%;
+    padding: 0 !important;
+    color: #000 !important;
+  }
+  .cv-page * {
+    color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
   }
 }

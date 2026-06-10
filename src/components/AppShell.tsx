@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { LogoArch } from "./LogoArch";
 import { Avatar } from "./Avatar";
 import cidades from "@/data/cidades.json";
@@ -130,6 +130,7 @@ export function AppShell({
   const pathname = usePathname();
   const nav = audience === "empresa" ? NAV_EMPRESA : NAV_ADMIN;
   const initials = topbarUserLabel ?? (audience === "empresa" ? "EA" : "AD");
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
@@ -137,9 +138,34 @@ export function AppShell({
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  // Fecha o drawer ao navegar entre rotas.
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
+
+  // Trava scroll do body quando drawer aberto (mobile).
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.style.overflow = drawerOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [drawerOpen]);
+
   return (
-    <div className="app-shell">
-      <aside className="app-sidebar" aria-label="Navegacao do painel">
+    <div className="app-shell" data-drawer-open={drawerOpen ? "true" : "false"}>
+      <button
+        type="button"
+        className={`app-drawer-overlay${drawerOpen ? " is-open" : ""}`}
+        aria-hidden={!drawerOpen}
+        tabIndex={-1}
+        onClick={() => setDrawerOpen(false)}
+      />
+      <aside
+        id="app-sidebar"
+        className="app-sidebar"
+        aria-label="Navegacao do painel"
+      >
         <div className="app-sidebar-brand">
           <LogoArch />
           <span className="app-sidebar-brand-text">
@@ -168,6 +194,28 @@ export function AppShell({
       </aside>
 
       <header className="app-topbar">
+        <button
+          type="button"
+          className="app-drawer-toggle"
+          aria-label="Abrir menu de navegacao"
+          aria-expanded={drawerOpen}
+          aria-controls="app-sidebar"
+          onClick={() => setDrawerOpen((v) => !v)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.7}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
         <div className="app-topbar-search">
           <svg
             className="icon-search"
