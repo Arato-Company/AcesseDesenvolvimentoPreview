@@ -1,42 +1,81 @@
-import { Container } from "./Container";
-import cidades from "@/data/cidades.json";
+import Link from "next/link";
+import { LogoArch } from "./LogoArch";
 
 /**
- * Footer shared do scaffold v0. Lista das 9 cidades do recorte
- * (Circuito das Aguas paulista) + selo de marca neutra.
+ * Footer publico (LP + paginas publicas).
+ * Lista das 9 cidades nao vem do JSON aqui pra manter o footer fora
+ * do client/data boundary e casar com o markup de `.site-footer`.
  */
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-line bg-navy-deep py-12 text-offwhite">
-      <Container className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
-        <div className="max-w-md">
-          <p className="font-display text-xl font-semibold">
-            Tem gente olhando.
-          </p>
-          <p className="mt-3 text-sm text-offwhite/70">
-            Plataforma regional de empregabilidade do Circuito das Aguas
-            paulista. Curadoria humana, vitrine de profissionais e vagas
-            regionais.
+    <footer className="site-footer" role="contentinfo">
+      <div className="container-ds">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <Link href="/" className="footer-logo-mark logo-mark">
+              <LogoArch />
+              <span>Acesse Desenvolvimento</span>
+            </Link>
+            <p className="mt-4 text-sm leading-relaxed text-offwhite/70">
+              Plataforma regional de empregabilidade no Circuito das Aguas
+              paulista. Tem gente olhando.
+            </p>
+          </div>
+          <div className="footer-col">
+            <h4>Plataforma</h4>
+            <ul>
+              <li>
+                <Link href="/empresa/vitrine">Vitrine</Link>
+              </li>
+              <li>
+                <Link href="/feed">Conteudos</Link>
+              </li>
+              <li>
+                <Link href="/empresa/planos">Empresas</Link>
+              </li>
+              <li>
+                <Link href="/candidato/planos">Candidatos</Link>
+              </li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h4>Sobre</h4>
+            <ul>
+              <li>
+                <Link href="/">Como funciona</Link>
+              </li>
+              <li>
+                <Link href="/feed">Historias</Link>
+              </li>
+              <li>
+                <Link href="/">FAQ</Link>
+              </li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h4>Legal &amp; Contato</h4>
+            <ul>
+              <li>
+                <Link href="/">Termos de uso</Link>
+              </li>
+              <li>
+                <Link href="/">Privacidade</Link>
+              </li>
+              <li>
+                <a href="mailto:contato@acessedesenvolvimento.com.br">
+                  contato@acessedesenvolvimento.com.br
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Acesse Desenvolvimento · Amparo · SP</p>
+          <p className="footer-region">
+            9 cidades · Circuito das Aguas paulista
           </p>
         </div>
-
-        <div>
-          <p className="font-mono text-2xs uppercase tracking-widest text-gold-light">
-            Cidades atendidas
-          </p>
-          <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 font-mono text-2xs text-offwhite/70">
-            {cidades.map((cidade) => (
-              <li key={cidade.slug}>{cidade.nome}</li>
-            ))}
-          </ul>
-        </div>
-      </Container>
-
-      <Container className="mt-10 border-t border-offwhite/10 pt-6">
-        <p className="font-mono text-2xs uppercase tracking-widest text-offwhite/40">
-          Acesse Desenvolvimento · v0 demo · {new Date().getFullYear()}
-        </p>
-      </Container>
+      </div>
     </footer>
   );
 }

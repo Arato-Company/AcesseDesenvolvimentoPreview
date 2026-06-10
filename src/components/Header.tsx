@@ -1,41 +1,35 @@
 import Link from "next/link";
-import { Container } from "./Container";
+import { LogoArch } from "./LogoArch";
 
 /**
- * Header shared do scaffold v0. Logo textual (sem imagem real ainda)
- * + nav minima que cobre os 3 publicos (candidato, empresa, admin).
+ * Header publico (LP + login). Replica `.site-header` do tokens.css.
+ * Nav e CTAs ficam invisiveis em mobile (controlado dentro do tokens.css).
  */
 export function Header() {
   return (
-    <header className="sticky top-0 z-10 border-b border-line bg-offwhite/90 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between gap-6">
-        <Link href="/" className="flex items-center gap-2 font-display">
-          <span className="text-lg font-semibold text-navy">
-            Acesse<span className="text-gold">.</span>
-          </span>
-          <span className="hidden font-mono text-2xs uppercase tracking-widest text-ink-2 md:inline">
-            Desenvolvimento
+    <header className="site-header" role="banner">
+      <div className="container-ds header-inner">
+        <Link href="/" className="logo-mark" aria-label="Acesse Desenvolvimento">
+          <LogoArch />
+          <span className="logo-text">
+            Acesse Desenvolvimento<span className="logo-dot">.</span>
           </span>
         </Link>
-
-        <nav className="flex items-center gap-6 font-mono text-2xs uppercase tracking-widest text-ink-2">
-          <Link href="/candidato/dashboard" className="hover:text-navy">
-            Candidato
-          </Link>
-          <Link href="/empresa/dashboard" className="hover:text-navy">
-            Empresa
-          </Link>
-          <Link href="/admin" className="hover:text-navy">
-            Admin
-          </Link>
-          <Link
-            href="/login"
-            className="rounded-md bg-navy px-4 py-2 text-2xs font-medium uppercase tracking-widest text-offwhite transition-colors duration-base ease hover:bg-navy-deep"
-          >
+        <nav className="nav-public" aria-label="Navegacao principal">
+          <Link href="/feed">Conteudos</Link>
+          <Link href="/empresa/vitrine">Vitrine</Link>
+          <Link href="/empresa/planos">Empresas</Link>
+          <Link href="/candidato/planos">Candidatos</Link>
+        </nav>
+        <div className="nav-cta">
+          <Link href="/login" className="btn btn-ghost">
             Entrar
           </Link>
-        </nav>
-      </Container>
+          <Link href="/login" className="btn btn-primary">
+            Cadastrar
+          </Link>
+        </div>
+      </div>
     </header>
   );
 }
