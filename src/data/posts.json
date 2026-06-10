@@ -1,0 +1,90 @@
+[
+  {
+    "id": "post-001",
+    "slug": "alta-temporada-2026-vagas-hoteis-serra-negra",
+    "titulo": "Alta temporada 2026: hoteis de Serra Negra abrem 120 vagas",
+    "resumo": "Levantamento da Acesse mostra picos de contratacao em junho e julho. Camareiras, recepcao bilingue e cozinha lideram demanda.",
+    "area": "turismo",
+    "cidade": "serra-negra",
+    "publicadoEm": "2026-06-08",
+    "imagemUrl": "/categorias/turismo.png",
+    "autor": "Curadoria Acesse"
+  },
+  {
+    "id": "post-002",
+    "slug": "como-montar-curriculo-hotelaria-circuito",
+    "titulo": "Curriculo de hotelaria no Circuito: 5 erros que custam a vaga",
+    "resumo": "O que recrutadores de Aguas de Lindoia e Socorro miram primeiro. Idiomas, escala e disponibilidade pra alta temporada vem antes de experiencia.",
+    "area": "turismo",
+    "cidade": "aguas-de-lindoia",
+    "publicadoEm": "2026-05-29",
+    "imagemUrl": "/categorias/turismo.png",
+    "autor": "Curadoria Acesse"
+  },
+  {
+    "id": "post-003",
+    "slug": "comercio-de-rua-amparo-vagas-fim-de-ano",
+    "titulo": "Comercio de Amparo dobra contratacoes em junho",
+    "resumo": "Lojistas do centro projetam 60 vagas temporarias com chance de efetivacao. Atendimento e caixa sao as funcoes mais buscadas.",
+    "area": "comercio",
+    "cidade": "amparo",
+    "publicadoEm": "2026-06-02",
+    "imagemUrl": "/categorias/comercio.png",
+    "autor": "Curadoria Acesse"
+  },
+  {
+    "id": "post-004",
+    "slug": "primeiro-emprego-no-comercio-monte-alegre",
+    "titulo": "Primeiro emprego no comercio: o que pesa em Monte Alegre do Sul",
+    "resumo": "Empresarios locais valorizam mais postura e disponibilidade do que experiencia. Confira o caminho recomendado pela curadoria.",
+    "area": "comercio",
+    "cidade": "monte-alegre-do-sul",
+    "publicadoEm": "2026-05-22",
+    "imagemUrl": "/categorias/comercio.png",
+    "autor": "Curadoria Acesse"
+  },
+  {
+    "id": "post-005",
+    "slug": "polo-ceramico-pedreira-segundo-turno",
+    "titulo": "Polo ceramico de Pedreira abre 40 vagas pro segundo turno",
+    "resumo": "Operadores de prensa, conferentes e auxiliares de producao. Curadoria recomenda NR-12 e disponibilidade pra escala 6x2.",
+    "area": "industria",
+    "cidade": "pedreira",
+    "publicadoEm": "2026-06-05",
+    "imagemUrl": "/categorias/industria.png",
+    "autor": "Curadoria Acesse"
+  },
+  {
+    "id": "post-006",
+    "slug": "tecnico-enfermagem-amparo-hospital",
+    "titulo": "Hospital Sao Lucas: novo edital pra tecnicos de enfermagem",
+    "resumo": "Vagas em PS adulto e UTI. COREN ativo, NR-32 e urgencia/emergencia sao filtros minimos. Inscricoes via vitrine curada.",
+    "area": "saude",
+    "cidade": "amparo",
+    "publicadoEm": "2026-05-30",
+    "imagemUrl": "/categorias/saude.png",
+    "autor": "Curadoria Acesse"
+  },
+  {
+    "id": "post-007",
+    "slug": "holambra-cooperativas-agro-juventude",
+    "titulo": "Cooperativas de Holambra ampliam vagas pra jovens do agro",
+    "resumo": "Logistica, expedicao e manejo. Programa regional cobre primeiro emprego e tecnicos de floricultura. Foco em retencao local.",
+    "area": "agro",
+    "cidade": "holambra",
+    "publicadoEm": "2026-05-26",
+    "imagemUrl": "/categorias/agro.png",
+    "autor": "Curadoria Acesse"
+  },
+  {
+    "id": "post-008",
+    "slug": "manifesto-vitrine-curada-circuito",
+    "titulo": "Por que uma vitrine regional curada faz diferenca",
+    "resumo": "A logica por tras da Acesse: empresas e candidatos do Circuito conversando direto, sem ruido de plataformas nacionais. Triagem humana antes da publicacao.",
+    "area": null,
+    "cidade": null,
+    "publicadoEm": "2026-05-15",
+    "imagemUrl": null,
+    "autor": "Curadoria Acesse"
+  }
+]

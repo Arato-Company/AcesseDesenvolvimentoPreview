@@ -103,3 +103,19 @@ export type Planos = {
   candidato: PlanoCandidatoInfo[];
   empresa: PlanoEmpresaInfo[];
 };
+
+export type Post = {
+  id: string;
+  slug: string;
+  titulo: string;
+  resumo: string;
+  /** Area pode ser null quando o post for institucional/regional puro. */
+  area: AreaSlug | null;
+  /** Cidade-foco do post; opcional pra posts regionais amplos. */
+  cidade: CidadeSlug | null;
+  /** Data ISO `YYYY-MM-DD`. */
+  publicadoEm: string;
+  /** Caminho relativo a `public/` ou null pra cards text-only. */
+  imagemUrl: string | null;
+  autor: string;
+};
