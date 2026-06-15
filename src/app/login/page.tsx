@@ -1,134 +1,237 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { Tabs } from "@/components/Tabs";
-import { FormField } from "@/components/FormField";
+import { Building2 } from "lucide-react";
+import { PlaceholderImage } from "@/components/PlaceholderImage";
 
 /**
- * /login — fonte: Web/01 - Entrada Login Dual.html (+ Mobile/01 referencia).
- * Reinterpretado: ao inves do split-screen 50/50 do Stitch, usamos tabs
- * candidato/empresa (mais responsivo + cabe melhor mobile).
- * Form e mock — submit so muda o feedback visual.
+ * /login — fonte ground truth: Stitch Web/01 (W01 desktop) + Mobile/01 (M01).
+ * Spec: PM/deliverables/specs-telas-criticas-batch2/_index.md (Batch 2).
+ *
+ * Decisao Caminho C hibrido: layout split-screen 50/50 (desktop) + split vertical
+ * 60/40 (mobile). Sem form de auth nesta rota — CTA leva direto pra dashboard
+ * (mock v0). Branding "Tem gente olhando." no centro como tagline-pill.
  */
-function LoginForm({ tipo }: { tipo: "candidato" | "empresa" }) {
-  const [submitted, setSubmitted] = useState(false);
 
-  const isEmpresa = tipo === "empresa";
-  const cadastroHref = isEmpresa ? "/empresa/cadastro" : "/candidato/cadastro";
-  const dashboardHref = isEmpresa ? "/empresa/dashboard" : "/candidato/dashboard";
-
+function LogoOverlay({ className }: { className?: string }) {
   return (
-    <form
-      className="flex flex-col gap-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSubmitted(true);
-      }}
-    >
-      <FormField
-        label={isEmpresa ? "E-mail corporativo" : "E-mail"}
-        type="email"
-        placeholder={isEmpresa ? "rh@suaempresa.com.br" : "voce@email.com"}
-        required
-        autoComplete="email"
-      />
-      <FormField
-        label="Senha"
-        type="password"
-        placeholder="********"
-        required
-        autoComplete="current-password"
-      />
-
-      <div className="flex items-center justify-between text-sm">
-        <label className="flex items-center gap-2 text-ink-2">
-          <input
-            type="checkbox"
-            className="h-4 w-4 rounded border-line"
-            defaultChecked
+    <div className={className}>
+      <div className="flex items-center gap-3">
+        <svg
+          width="60"
+          height="30"
+          viewBox="0 0 60 30"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M5,30 C5,10 55,10 55,30"
+            stroke="var(--c-gold-light)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
           />
-          Manter conectado
-        </label>
-        <a
-          href="#"
-          className="font-medium text-navy underline-offset-4 hover:underline"
-        >
-          Esqueci a senha
-        </a>
+        </svg>
+        <h1 className="font-display text-[36px] leading-none text-navy">
+          Acesse Desenvolvimento.
+        </h1>
       </div>
+    </div>
+  );
+}
 
-      <button type="submit" className="btn btn-primary btn-lg btn-block">
-        {isEmpresa ? "Entrar como empresa" : "Entrar"}
-      </button>
-
-      <p className="text-center text-sm text-ink-2">
-        Ainda nao tem conta?{" "}
-        <Link
-          href={cadastroHref}
-          className="font-medium text-navy underline-offset-4 hover:underline"
-        >
-          {isEmpresa ? "Cadastrar empresa" : "Cadastrar perfil"} →
-        </Link>
-      </p>
-
-      {submitted ? (
-        <div className="rounded-lg border border-success/40 bg-success/10 p-4 text-center text-sm text-navy">
-          Mock — sem auth real. Va pra{" "}
-          <Link href={dashboardHref} className="font-medium underline">
-            {dashboardHref}
-          </Link>
-        </div>
-      ) : null}
-    </form>
+function LogoOverlayMobile() {
+  return (
+    <div className="flex items-center gap-2">
+      <svg
+        width="48"
+        height="24"
+        viewBox="0 0 60 30"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M5,30 C5,10 55,10 55,30"
+          stroke="var(--c-gold-light)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+      <h1 className="font-display text-[18px] font-bold uppercase tracking-tighter text-navy">
+        Acesse Desenvolvimento
+      </h1>
+    </div>
   );
 }
 
 export default function LoginPage() {
   return (
     <>
-      <Header />
+      {/* ===================== W01 — DESKTOP ===================== */}
+      <main className="relative hidden h-screen overflow-hidden md:flex">
+        <LogoOverlay className="absolute left-1/2 top-8 z-50 -translate-x-1/2" />
 
-      <main
-        className="bg-paper py-20"
-        style={{ minHeight: "calc(100vh - 200px)" }}
-      >
-        <div className="container-ds max-w-2xl">
-          <div className="rounded-2xl border border-line bg-offwhite p-10 shadow-2 md:p-12">
-            <p className="eyebrow mb-3 text-center">Tem gente olhando.</p>
-            <h1 className="display-lg mb-2 text-center">Entrar</h1>
-            <p className="mb-10 text-center text-ink-2">
-              Escolha o seu lado da plataforma.
-            </p>
-
-            <div className="flex flex-col items-center">
-              <Tabs
-                ariaLabel="Tipo de conta"
-                tabs={[
-                  {
-                    id: "candidato",
-                    label: "Sou candidato",
-                    content: <LoginForm tipo="candidato" />,
-                  },
-                  {
-                    id: "empresa",
-                    label: "Sou empresa",
-                    content: <LoginForm tipo="empresa" />,
-                  },
-                ]}
+        {/* Left — Candidato */}
+        <section className="flex flex-1 flex-col items-center justify-center border-r border-line/30 bg-offwhite px-8">
+          <div className="max-w-md space-y-8 text-center">
+            <div className="mx-auto w-72">
+              <PlaceholderImage
+                src="/avatares/hero-login-candidato.webp"
+                alt="Profissional regional em ambiente de trabalho"
+                fallbackLabel="HERO CANDIDATO"
+                width={288}
+                height={256}
+                className="h-64 w-72 rounded-xl object-cover"
+                priority
               />
             </div>
+            <h2 className="font-display text-[48px] leading-tight text-navy">
+              Sou candidato
+            </h2>
+            <p className="mx-auto max-w-sm font-body text-base leading-relaxed text-ink-2">
+              Explore as melhores oportunidades da regiao em um ecossistema
+              focado no seu crescimento profissional.
+            </p>
+            <Link
+              href="/candidato/dashboard"
+              className="btn btn-primary btn-lg inline-block rounded-lg px-12 py-4 transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
+            >
+              Acessar vagas
+            </Link>
           </div>
+        </section>
 
-          <p className="mt-8 text-center font-mono text-2xs uppercase tracking-widest text-ink-3">
-            Ecossistema regional · Vitrine · Vagas · Curadoria
+        {/* Right — Empresa */}
+        <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-navy px-8">
+          <Building2
+            className="pointer-events-none absolute inset-0 m-auto h-64 w-64 text-gold-light opacity-30"
+            aria-hidden="true"
+            strokeWidth={1}
+          />
+          <div className="relative z-10 max-w-md space-y-8 text-center">
+            <h2 className="font-display text-[48px] leading-tight text-gold-light">
+              Sou empresa
+            </h2>
+            <p className="mx-auto max-w-sm font-body text-base leading-relaxed text-offwhite/70">
+              Encontre talentos curados e acelere o desenvolvimento da sua
+              equipe com as melhores mentes da regiao.
+            </p>
+            <Link
+              href="/empresa/vitrine"
+              className="btn btn-gold btn-lg inline-block rounded-lg px-12 py-4 transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
+            >
+              Buscar talentos
+            </Link>
+          </div>
+        </section>
+
+        {/* Tagline pill */}
+        <div className="fixed bottom-16 left-1/2 z-50 -translate-x-1/2 rounded-full border border-line/50 bg-offwhite/80 px-6 py-2 backdrop-blur-sm">
+          <span className="font-display italic text-gold-deep">
+            Tem gente olhando.
+          </span>
+        </div>
+
+        {/* Footer barra */}
+        <div className="fixed bottom-0 left-0 z-40 w-full border-t border-line/20 bg-navy/10 py-4 backdrop-blur-md">
+          <p className="flex flex-wrap justify-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-widest text-navy/60">
+            <span>ECOSSISTEMA REGIONAL</span>
+            <span aria-hidden="true">•</span>
+            <span>VITRINE</span>
+            <span aria-hidden="true">•</span>
+            <span>VAGAS</span>
+            <span aria-hidden="true">•</span>
+            <span>CURADORIA</span>
+          </p>
+        </div>
+
+        {/* Location decorators — desktop wide */}
+        <div
+          className="fixed bottom-24 left-10 z-40 hidden lg:block"
+          style={{ writingMode: "vertical-lr", transform: "rotate(180deg)" }}
+        >
+          <p className="font-mono text-[10px] uppercase tracking-widest text-navy/30">
+            Jaguariuna · Amparo
+          </p>
+        </div>
+        <div
+          className="fixed bottom-24 right-10 z-40 hidden lg:block"
+          style={{ writingMode: "vertical-lr" }}
+        >
+          <p className="font-mono text-[10px] uppercase tracking-widest text-gold-light/30">
+            Socorro · Serra Negra
           </p>
         </div>
       </main>
 
-      <Footer />
+      {/* ===================== M01 — MOBILE ===================== */}
+      <main className="relative flex min-h-screen flex-col overflow-x-hidden md:hidden">
+        {/* Header fixo */}
+        <header className="fixed left-0 top-0 z-30 flex h-20 w-full items-center justify-center bg-offwhite/80 px-4 backdrop-blur-sm">
+          <LogoOverlayMobile />
+        </header>
+
+        {/* Upper Candidato — 60% */}
+        <section
+          className="flex flex-col items-center justify-center bg-paper px-4 pt-16 text-center"
+          style={{ height: "60vh", minHeight: "60vh" }}
+        >
+          <PlaceholderImage
+            src="/avatares/hero-login-candidato-mobile.webp"
+            alt="Profissional regional"
+            fallbackLabel="HERO MOBILE"
+            width={192}
+            height={192}
+            className="mb-6 h-48 w-48 rounded-xl object-contain opacity-80 mix-blend-multiply grayscale"
+            priority
+          />
+          <h2 className="mb-4 font-display text-2xl text-navy">
+            Sou candidato
+          </h2>
+          <Link
+            href="/candidato/dashboard"
+            className="btn btn-primary rounded-lg px-8 py-3 font-bold uppercase tracking-wider transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
+          >
+            Acessar vagas
+          </Link>
+        </section>
+
+        {/* Split badge */}
+        <div
+          className="pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-line/30 bg-offwhite px-6 py-2 shadow-sm"
+          style={{ top: "60vh" }}
+        >
+          <span className="font-mono text-xs uppercase text-gold-deep">
+            Tem gente olhando
+          </span>
+        </div>
+
+        {/* Lower Empresa — 40% */}
+        <section
+          className="relative flex flex-col items-center justify-center overflow-hidden bg-navy px-4 text-center"
+          style={{ height: "40vh", minHeight: "40vh" }}
+        >
+          <Building2
+            className="pointer-events-none absolute inset-0 m-auto text-gold-light opacity-10"
+            style={{ width: "300px", height: "300px" }}
+            aria-hidden="true"
+            strokeWidth={1}
+          />
+          <h2 className="relative z-10 mb-4 font-display text-lg text-offwhite">
+            Sou empresa
+          </h2>
+          <Link
+            href="/empresa/vitrine"
+            className="btn btn-gold relative z-10 rounded-lg px-8 py-3 font-bold uppercase tracking-wider transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
+          >
+            Buscar talentos
+          </Link>
+        </section>
+
+        {/* Footer discreto */}
+        <div className="pointer-events-none fixed bottom-4 left-0 z-30 w-full text-center">
+          <p className="font-mono text-[10px] uppercase text-ink-2/40">
+            © 2026 ACESSE DESENVOLVIMENTO · ECOSSISTEMA REGIONAL
+          </p>
+        </div>
+      </main>
     </>
   );
 }
