@@ -1327,7 +1327,7 @@ em {
     transform: translateX(-100%);
     transition: transform 0.24s ease;
     z-index: 60;
-    box-shadow: var(--shadow-5);
+    box-shadow: var(--sh-4);
   }
   .app-sidebar-brand-text,
   .app-sidebar-nav a span:not(.icon),
@@ -1431,27 +1431,27 @@ em {
   box-shadow: 0 0 0 3px var(--c-offwhite);
 }
 .timeline-item .timeline-period {
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
+  font-family: var(--f-mono);
+  font-size: var(--fs-2xs);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--c-gold-deep);
   margin-bottom: var(--s-1);
 }
 .timeline-item .timeline-role {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
+  font-family: var(--f-display);
+  font-size: var(--fs-lg);
   font-weight: 600;
   color: var(--c-navy);
   margin-bottom: var(--s-1);
 }
 .timeline-item .timeline-company {
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--c-ink-2);
   margin-bottom: var(--s-2);
 }
 .timeline-item .timeline-detail {
-  font-size: var(--text-sm);
+  font-size: var(--fs-sm);
   color: var(--c-ink-2);
   line-height: 1.6;
 }
