@@ -15,9 +15,18 @@ type CandidatoLayoutProps = {
   hideBottomNav?: boolean;
   /** Mostrar botao back (em vez do logo). */
   backHref?: string;
+  /** Esconder o phone-frame decorativo (M06 + telas que precisam fullscreen). */
+  noFrame?: boolean;
+  /** Esconder o header mobile (M06 renderiza topbar custom). */
+  hideHeader?: boolean;
   children: ReactNode;
 };
 
+/**
+ * BottomNav reduzido pra 3 itens conforme spec Batch 2 (alinha com Stitch).
+ * Remove "Feed" e "Planos" do mobile candidato — Planos vira pagina dedicada
+ * acessada via Perfil, Feed permanece desktop-only por enquanto.
+ */
 const BOTTOM_NAV = [
   {
     href: "/candidato/dashboard",
@@ -27,21 +36,15 @@ const BOTTOM_NAV = [
   },
   {
     href: "/candidato/curriculo",
-    label: "CV",
+    label: "Curriculo",
     iconPath:
       "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8",
   },
   {
-    href: "/feed",
-    label: "Feed",
+    href: "/candidato/perfil",
+    label: "Perfil",
     iconPath:
-      "M4 6h16M4 12h16M4 18h10",
-  },
-  {
-    href: "/candidato/planos",
-    label: "Planos",
-    iconPath:
-      "M3 10h18M5 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z",
+      "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",
   },
 ];
 
@@ -73,13 +76,20 @@ export function CandidatoLayout({
   userName = "Candidato",
   hideBottomNav = false,
   backHref,
+  noFrame = false,
+  hideHeader = false,
   children,
 }: CandidatoLayoutProps) {
   const pathname = usePathname();
+  const wrapperClass = noFrame
+    ? "min-h-screen bg-offwhite"
+    : "bg-paper min-h-screen md:py-12";
+  const innerClass = noFrame ? "min-h-screen" : "phone-frame";
 
   return (
-    <div className="bg-paper min-h-screen md:py-12">
-      <div className="phone-frame">
+    <div className={wrapperClass}>
+      <div className={innerClass}>
+        {hideHeader ? null : (
         <header className="mobile-header">
           {backHref ? (
             <Link
@@ -124,8 +134,9 @@ export function CandidatoLayout({
             <Avatar name={userName} size="sm" />
           </Link>
         </header>
+        )}
 
-        <main className="px-5 pb-12 pt-6">{children}</main>
+        <main className={noFrame ? "" : "px-5 pb-12 pt-6"}>{children}</main>
 
         {hideBottomNav ? null : (
           <nav className="bottom-nav" aria-label="Navegacao candidato">
