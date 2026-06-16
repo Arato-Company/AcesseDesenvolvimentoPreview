@@ -6,7 +6,8 @@
     "area": "turismo",
     "porte": "Media",
     "resumo": "Resort termal com 84 apartamentos, restaurante regional e spa. Operacao 7 dias.",
-    "plano": "premium"
+    "plano": "premium",
+    "logoUrl": "/empresas/logo-logtech.svg"
   },
   {
     "id": "emp-002",
@@ -15,7 +16,8 @@
     "area": "agro",
     "porte": "Grande",
     "resumo": "Cooperativa de produtores de flores e plantas ornamentais. Logistica regional.",
-    "plano": "destaque"
+    "plano": "destaque",
+    "logoUrl": "/empresas/logo-biofarm.svg"
   },
   {
     "id": "emp-003",
@@ -24,7 +26,8 @@
     "area": "industria",
     "porte": "Media",
     "resumo": "Fabrica de porcelana e ceramica decorativa. 180 funcionarios em dois turnos.",
-    "plano": "basico"
+    "plano": "basico",
+    "logoUrl": "/empresas/logo-acesse.svg"
   },
   {
     "id": "emp-004",
@@ -33,7 +36,8 @@
     "area": "saude",
     "porte": "Media",
     "resumo": "Hospital geral com pronto-socorro 24h, maternidade e clinicas de especialidades.",
-    "plano": "destaque"
+    "plano": "destaque",
+    "logoUrl": null
   },
   {
     "id": "emp-005",
@@ -42,6 +46,7 @@
     "area": "comercio",
     "porte": "Pequena",
     "resumo": "Rede regional de mercados de bairro. 4 unidades no recorte.",
-    "plano": "basico"
+    "plano": "basico",
+    "logoUrl": null
   }
 ]

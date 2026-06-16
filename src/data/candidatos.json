@@ -10,7 +10,8 @@
     "tags": ["NR-10", "NR-35", "CLT", "10+ ANOS"],
     "matchScore": 92,
     "plano": "premium",
-    "curado": true
+    "curado": true,
+    "foto": "/avatares/cand-001.webp"
   },
   {
     "id": "cand-002",
@@ -23,7 +24,8 @@
     "tags": ["INGLES", "ESPANHOL", "HOTELARIA"],
     "matchScore": 88,
     "plano": "destaque",
-    "curado": true
+    "curado": true,
+    "foto": "/avatares/cand-002.webp"
   },
   {
     "id": "cand-003",
@@ -36,7 +38,8 @@
     "tags": ["COREN", "UTI", "EMERGENCIA"],
     "matchScore": 90,
     "plano": "premium",
-    "curado": true
+    "curado": true,
+    "foto": "/avatares/cand-003.webp"
   },
   {
     "id": "cand-004",
@@ -49,7 +52,8 @@
     "tags": ["TURNO", "PRIMEIRO EMPREGO", "CNH B"],
     "matchScore": 65,
     "plano": "start",
-    "curado": false
+    "curado": false,
+    "foto": "/avatares/cand-004.webp"
   },
   {
     "id": "cand-005",
@@ -62,7 +66,8 @@
     "tags": ["ATENDIMENTO", "CAIXA", "3+ ANOS"],
     "matchScore": 80,
     "plano": "destaque",
-    "curado": false
+    "curado": false,
+    "foto": "/avatares/cand-005.webp"
   },
   {
     "id": "cand-006",
@@ -75,7 +80,8 @@
     "tags": ["EXCEL", "CNH B", "LOGISTICA"],
     "matchScore": 87,
     "plano": "destaque",
-    "curado": true
+    "curado": true,
+    "foto": "/avatares/cand-006.webp"
   },
   {
     "id": "cand-007",
@@ -88,7 +94,8 @@
     "tags": ["HOTELARIA", "ESCALA 6X1"],
     "matchScore": 72,
     "plano": "start",
-    "curado": false
+    "curado": false,
+    "foto": null
   },
   {
     "id": "cand-008",
@@ -101,7 +108,8 @@
     "tags": ["ATENDIMENTO", "ALTA TEMPORADA", "GORJETAS"],
     "matchScore": 78,
     "plano": "destaque",
-    "curado": false
+    "curado": false,
+    "foto": null
   },
   {
     "id": "cand-009",
@@ -114,7 +122,8 @@
     "tags": ["AGRO", "12+ ANOS", "ESPECIALISTA"],
     "matchScore": 95,
     "plano": "premium",
-    "curado": true
+    "curado": true,
+    "foto": null
   },
   {
     "id": "cand-010",
@@ -127,6 +136,7 @@
     "tags": ["ADMINISTRATIVO", "EXCEL", "PRIMEIRO EMPREGO"],
     "matchScore": 60,
     "plano": "start",
-    "curado": false
+    "curado": false,
+    "foto": null
   }
 ]

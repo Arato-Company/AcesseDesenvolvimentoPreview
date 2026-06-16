@@ -67,6 +67,8 @@ export type Candidato = {
   matchScore: number;
   plano: PlanoCandidato;
   curado: boolean;
+  /** Caminho relativo a `public/` para a foto do candidato. `null` ou ausente -> usa fallback. */
+  foto?: string | null;
 };
 
 export type PlanoEmpresa = "basico" | "destaque" | "premium";
@@ -79,6 +81,8 @@ export type Empresa = {
   porte: "Pequena" | "Media" | "Grande";
   resumo: string;
   plano: PlanoEmpresa;
+  /** Caminho relativo a `public/` para a logo da empresa. `null` ou ausente -> usa fallback. */
+  logoUrl?: string | null;
 };
 
 export type PlanoCandidatoInfo = {
