@@ -1,166 +1,216 @@
-import Image from "next/image";
+import { ArrowRight, Bell, UserCircle } from "lucide-react";
 import Link from "next/link";
-import { Container } from "@/components/Container";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import postsRaw from "@/data/posts.json";
-import { areaNome, cidadeNome } from "@/data/lookups";
-import type { Post } from "@/types";
+import { PlaceholderImage } from "@/components/PlaceholderImage";
 
-const posts = postsRaw as Post[];
+type Artigo = {
+  id: string;
+  categoria: string;
+  titulo: string;
+  resumo: string;
+  data: string;
+  leitura: string;
+  imagem: string;
+};
 
-const ordenados = [...posts].sort((a, b) =>
-  b.publicadoEm.localeCompare(a.publicadoEm),
-);
-const [destaque, ...restante] = ordenados;
-
-function formatarData(iso: string): string {
-  const [ano, mes, dia] = iso.split("-").map(Number);
-  if (!ano || !mes || !dia) return iso;
-  return new Date(ano, mes - 1, dia).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
+const ARTIGOS: Artigo[] = [
+  {
+    id: "art-1",
+    categoria: "Dica de carreira",
+    titulo: "Como se destacar em entrevistas tecnicas locais",
+    resumo:
+      "Recrutadores do Circuito compartilham o que pesa numa entrevista presencial regional.",
+    data: "14 Out",
+    leitura: "5 min leitura",
+    imagem: "/feed/artigo-01.webp",
+  },
+  {
+    id: "art-2",
+    categoria: "Mercado local",
+    titulo: "Nova unidade fabril abre 200 vagas",
+    resumo:
+      "Inauguracao em Jaguariuna deve absorver mao de obra das cidades vizinhas ate dezembro.",
+    data: "13 Out",
+    leitura: "3 min leitura",
+    imagem: "/feed/artigo-02.webp",
+  },
+  {
+    id: "art-3",
+    categoria: "Dica de carreira",
+    titulo: "Soft skills: O diferencial no setor de servicos",
+    resumo:
+      "Pesquisa regional mostra que escuta e adaptacao pesam mais que tempo de casa.",
+    data: "11 Out",
+    leitura: "4 min leitura",
+    imagem: "/feed/artigo-03.webp",
+  },
+];
 
 /**
- * /feed — fonte: Web/14 + Mobile/09.
- * Conteudo regional. Posts servidos de `posts.json`. Sem rota de detalhe ainda
- * (links de "Ler" caem em `#` placeholder pra demo).
+ * /feed — M09 (Batch 3, fiel ao Stitch).
+ *
+ * Decisao PM: feed NAO usa CandidatoLayout (foco no conteudo, sem bottom-nav
+ * intrusiva). Standalone mobile-first com max-w-md. Topbar custom.
+ *
+ * Conteudo:
+ *  - post pinned navy "Curadoria da semana" (hardcoded v0, v1 vira CMS)
+ *  - 2 cards article (artigo-01, artigo-02)
+ *  - artigo editorial expandido com blockquote
+ *  - 1 card article (artigo-03)
+ *  - CTA final navy-soft "Atualizar curriculo"
  */
 export default function FeedPage() {
   return (
-    <>
-      <Header />
-      <main className="flex-1 bg-paper py-12 md:py-16">
-        <Container>
-          <header className="mb-10 max-w-3xl md:mb-14">
-            <p className="caps mb-3 text-gold-deep">Feed regional</p>
-            <h1 className="display-xl mb-4">
-              O que esta rolando no Circuito.
-            </h1>
-            <p className="lead text-ink-2">
-              Vagas em alta, dicas da curadoria e movimentacao do mercado nas 9
-              cidades do Circuito das Aguas paulista. Atualizado pela equipe
-              Acesse.
+    <div className="min-h-screen bg-offwhite pb-24 text-ink-1">
+      {/* TopAppBar mobile */}
+      <header className="mobile-header sticky top-0 z-50">
+        <h1 className="font-display text-[20px] font-bold tracking-tight text-navy">
+          Novidades
+        </h1>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            className="icon-btn rounded-full"
+            aria-label="Notificacoes"
+          >
+            <Bell className="h-6 w-6 text-navy" aria-hidden="true" />
+          </button>
+          <Link
+            href="/candidato/dashboard"
+            className="icon-btn rounded-full"
+            aria-label="Perfil"
+          >
+            <UserCircle className="h-6 w-6 text-navy" aria-hidden="true" />
+          </Link>
+        </div>
+      </header>
+
+      <main className="mx-auto mt-6 max-w-md space-y-12 px-4">
+        {/* Post pinned — Curadoria da semana */}
+        <section className="relative overflow-hidden rounded-xl border-2 border-gold-light bg-navy text-offwhite shadow-sm">
+          <div className="p-6">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="eyebrow caps-on-dark text-gold-light">
+                ✦ Curadoria da semana
+              </span>
+            </div>
+            <h2 className="mb-3 font-display text-[28px] font-semibold leading-tight">
+              O futuro da manufatura na regiao norte
+            </h2>
+            <p className="mb-6 font-body text-base opacity-90">
+              Uma analise profunda sobre como as industrias locais estao se
+              adaptando a automacao e o que isso significa pra quem trabalha
+              hoje no Circuito.
             </p>
-          </header>
-
-          {/* Destaque */}
-          {destaque ? (
-            <Link
-              href="#"
-              className="group mb-12 grid gap-6 overflow-hidden rounded-2xl border border-line bg-offwhite shadow-2 transition hover:border-gold hover:shadow-3 md:mb-16 md:grid-cols-[1.2fr_1fr]"
-            >
-              <div
-                className="relative aspect-[16/10] md:aspect-auto"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #FBFAF7 0%, #F4EFE3 100%)",
-                }}
-              >
-                {destaque.imagemUrl ? (
-                  <Image
-                    src={destaque.imagemUrl}
-                    alt=""
-                    fill
-                    className="object-contain p-8"
-                    sizes="(max-width: 768px) 100vw, 60vw"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center p-8">
-                    <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
-                      Editorial Acesse
-                    </p>
-                  </div>
-                )}
+            <div className="flex items-center justify-between text-offwhite/60">
+              <div className="flex items-center gap-4">
+                <span className="eyebrow text-[10px]">12 Out</span>
+                <span className="eyebrow text-[10px]">8 min leitura</span>
               </div>
-              <div className="flex flex-col justify-center p-6 md:p-10">
-                <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-2xs uppercase tracking-widest text-ink-3">
-                  <span className="text-gold-deep">Destaque</span>
-                  {destaque.area ? (
-                    <>
-                      <span>·</span>
-                      <span>{areaNome(destaque.area)}</span>
-                    </>
-                  ) : null}
-                  {destaque.cidade ? (
-                    <>
-                      <span>·</span>
-                      <span>{cidadeNome(destaque.cidade)}</span>
-                    </>
-                  ) : null}
-                </div>
-                <h2 className="display-md mb-3 text-navy group-hover:text-gold-deep">
-                  {destaque.titulo}
-                </h2>
-                <p className="mb-4 text-ink-2">{destaque.resumo}</p>
-                <p className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                  {formatarData(destaque.publicadoEm)} · {destaque.autor}
-                </p>
-              </div>
-            </Link>
-          ) : null}
-
-          {/* Grid */}
-          <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {restante.map((post) => (
-              <Link
-                key={post.id}
-                href="#"
-                className="group flex flex-col overflow-hidden rounded-xl border border-line bg-offwhite transition hover:-translate-y-0.5 hover:border-gold hover:shadow-3"
-              >
-                <div
-                  className="relative aspect-[16/10]"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #FBFAF7 0%, #F4EFE3 100%)",
-                  }}
-                >
-                  {post.imagemUrl ? (
-                    <Image
-                      src={post.imagemUrl}
-                      alt=""
-                      fill
-                      className="object-contain p-6"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
-                        Editorial
-                      </p>
-                    </div>
-                  )}
-                  {post.area ? (
-                    <span className="absolute left-3 top-3 rounded-full bg-navy/90 px-3 py-1 font-mono text-2xs uppercase tracking-widest text-offwhite">
-                      {areaNome(post.area)}
-                    </span>
-                  ) : null}
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="mb-2 font-display text-lg font-semibold text-navy group-hover:text-gold-deep">
-                    {post.titulo}
-                  </h3>
-                  <p className="mb-4 flex-1 text-sm text-ink-2">
-                    {post.resumo}
-                  </p>
-                  <p className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                    {formatarData(post.publicadoEm)}
-                    {post.cidade ? ` · ${cidadeNome(post.cidade)}` : ""}
-                  </p>
-                </div>
-              </Link>
-            ))}
+              <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            </div>
           </div>
+        </section>
 
-          <p className="mt-12 text-center font-mono text-2xs uppercase tracking-widest text-ink-3">
-            CURADORIA · publicacoes revisadas pela equipe Acesse
+        {/* Cards artigos 1-2 */}
+        {ARTIGOS.slice(0, 2).map((a) => (
+          <ArtigoCard key={a.id} artigo={a} />
+        ))}
+
+        {/* Artigo editorial expandido (entre artigo 2 e 3) */}
+        <article className="border-y border-line py-8">
+          <span className="eyebrow mb-4 block text-gold-deep">
+            Entrevista exclusiva
+          </span>
+          <h2 className="mb-6 font-display text-[28px] font-semibold leading-tight text-navy">
+            “O talento regional e nosso maior ativo”, diz CEO da TechLog
+          </h2>
+          <div className="space-y-4 font-body text-base text-ink-1">
+            <p>
+              Conversamos com Ricardo Almeida sobre os desafios de contratar em
+              um cenario de rapida transformacao digital e por que a empresa
+              decidiu manter o centro de operacoes no interior paulista.
+            </p>
+            <blockquote className="border-l-4 border-gold-light bg-paper py-4 pl-4 italic text-ink-2">
+              “Nao buscamos apenas o melhor curriculo, buscamos quem entende a
+              dinamica e as necessidades da nossa gente.”
+            </blockquote>
+            <p>
+              A TechLog planeja implementar um programa de mentorias gratuitas
+              para jovens da regiao a partir do proximo trimestre.
+            </p>
+          </div>
+          <div className="mt-8 flex items-center gap-3">
+            <PlaceholderImage
+              src="/avatares/autor-joao.webp"
+              alt="Joao Pedro"
+              fallbackLabel="JP"
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-full object-cover"
+            />
+            <div>
+              <p className="font-display text-[16px] font-semibold text-navy">
+                Por Joao Pedro
+              </p>
+              <p className="font-body text-xs text-ink-3">Editor de Carreira</p>
+            </div>
+          </div>
+        </article>
+
+        {/* Card artigo 3 */}
+        {ARTIGOS.slice(2).map((a) => (
+          <ArtigoCard key={a.id} artigo={a} />
+        ))}
+
+        {/* CTA final */}
+        <div className="rounded-xl bg-navy-soft p-8 text-center">
+          <h3 className="mb-4 font-display text-[20px] font-semibold text-offwhite">
+            Quer aparecer pras empresas?
+          </h3>
+          <p className="mb-6 font-body text-sm text-offwhite/70">
+            Mantenha seu curriculo atualizado e seu perfil em destaque na
+            vitrine.
           </p>
-        </Container>
+          <Link
+            href="/candidato/curriculo"
+            className="btn btn-gold flex h-14 w-full items-center justify-center gap-2 rounded-xl font-semibold active:scale-95"
+          >
+            <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            Atualizar curriculo
+          </Link>
+        </div>
       </main>
-      <Footer />
-    </>
+    </div>
+  );
+}
+
+function ArtigoCard({ artigo }: { artigo: Artigo }) {
+  return (
+    <article className="group">
+      <div className="mb-4 aspect-video w-full overflow-hidden rounded-lg bg-paper">
+        <PlaceholderImage
+          src={artigo.imagem}
+          alt={artigo.titulo}
+          fallbackLabel="Editorial"
+          width={640}
+          height={360}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <span className="eyebrow mb-2 block text-gold-deep">
+        {artigo.categoria}
+      </span>
+      <h3 className="mb-2 font-display text-[20px] font-semibold text-navy">
+        {artigo.titulo}
+      </h3>
+      <p className="mb-3 line-clamp-2 font-body text-sm text-ink-2">
+        {artigo.resumo}
+      </p>
+      <div className="flex items-center gap-4 text-ink-3">
+        <span className="eyebrow text-[10px]">{artigo.data}</span>
+        <span className="eyebrow text-[10px]">·</span>
+        <span className="eyebrow text-[10px]">{artigo.leitura}</span>
+      </div>
+    </article>
   );
 }
