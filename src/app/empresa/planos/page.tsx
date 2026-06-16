@@ -1,87 +1,116 @@
-import { AppShell } from "@/components/AppShell";
-import { PricingCard } from "@/components/PricingCard";
-import planos from "@/data/planos.json";
-import type { Planos } from "@/types";
+"use client";
 
-const planosTyped = planos as Planos;
+import { useState } from "react";
+import { AppShell } from "@/components/AppShell";
+import { CreditPackCard } from "@/components/CreditPackCard";
+import { PaymentForm } from "@/components/PaymentForm";
+
+type Pack = {
+  id: "inicial" | "crescimento" | "volume";
+  eyebrow: string;
+  quantidade: number;
+  preco: string;
+  precoLabel: string;
+  features: string[];
+  ctaLabel: string;
+  featured?: boolean;
+};
+
+const PACKS: Pack[] = [
+  {
+    id: "inicial",
+    eyebrow: "Pacote inicial",
+    quantidade: 10,
+    preco: "R$ 49,90",
+    precoLabel: "10 creditos",
+    features: [
+      "Validade 12 meses",
+      "Busca curada",
+      "Contato com candidatos curados",
+    ],
+    ctaLabel: "Escolher inicial",
+  },
+  {
+    id: "crescimento",
+    eyebrow: "Pacote crescimento",
+    quantidade: 50,
+    preco: "R$ 199,90",
+    precoLabel: "50 creditos",
+    features: [
+      "Validade 18 meses",
+      "Prioridade na curadoria",
+      "Acesso a vitrine premium",
+      "Relatorios mensais",
+    ],
+    ctaLabel: "Escolher crescimento",
+    featured: true,
+  },
+  {
+    id: "volume",
+    eyebrow: "Pacote volume",
+    quantidade: 200,
+    preco: "R$ 699,90",
+    precoLabel: "200 creditos",
+    features: [
+      "Validade 24 meses",
+      "Concierge dedicado",
+      "Listas exportaveis",
+      "API parceira",
+    ],
+    ctaLabel: "Escolher volume",
+  },
+];
 
 /**
- * /empresa/planos — fonte: Web/08 - Planos Checkout Empresa.html.
- * Tres planos mensais. Premium inclui concierge humano.
- * Reutiliza PricingCard pro mesmo visual da LP.
+ * /empresa/planos — W08. Creditos de busca empresa (one-shot).
+ * CreditPackCard x3 + PaymentForm mode="credito".
  */
-export default function EmpresaPlanosPage() {
+export default function PlanosEmpresaPage() {
+  const [selected, setSelected] = useState<Pack>(PACKS[1]);
+
   return (
     <AppShell
       audience="empresa"
-      topbarTitle="Planos"
-      topbarUserLabel="CA"
+      topbarTitle="Creditos"
+      topbarUserLabel="EM"
     >
-      <header className="mx-auto mb-16 max-w-3xl text-center">
-        <p className="caps mb-3">Planos para empresas</p>
-        <h1 className="display-xl mb-4">Mensal recorrente. Sem letra miuda.</h1>
-        <p className="lead mx-auto">
-          Cancele quando quiser. As parceiras institucionais ganham 2 meses
-          gratis.
+      <div className="mx-auto max-w-[1100px] px-2 py-2">
+        <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+          Creditos de busca
         </p>
-      </header>
+        <h1 className="mt-2 font-display text-3xl font-semibold text-navy">
+          Compre creditos pra desbloquear buscas e contatos.
+        </h1>
+        <p className="mt-2 max-w-2xl text-base text-ink-2">
+          Cada credito libera 1 contato direto com um candidato curado. Sem
+          assinatura, sem renovacao automatica.
+        </p>
 
-      <div className="mb-16 grid items-stretch gap-6 lg:grid-cols-3">
-        {planosTyped.empresa.map((p) => {
-          const isPremium = p.id === "premium";
-          const isDestaque = p.id === "destaque";
-          return (
-            <PricingCard
+        <div className="mb-20 mt-10 grid grid-cols-1 items-stretch gap-8 md:grid-cols-3">
+          {PACKS.map((p) => (
+            <CreditPackCard
               key={p.id}
-              nome={p.nome}
+              eyebrow={p.eyebrow}
+              quantidade={p.quantidade}
               preco={p.preco}
-              periodo="/mes"
-              destaques={p.destaques}
-              variant={
-                isPremium ? "premium" : isDestaque ? "featured" : "default"
-              }
-              badge={
-                isPremium
-                  ? "✦ Concierge"
-                  : isDestaque
-                    ? "Mais escolhido"
-                    : undefined
-              }
-              badgeVariant={isPremium ? "gold" : "default"}
-              cta={
-                <button
-                  type="button"
-                  className={`btn ${isPremium ? "btn-premium" : isDestaque ? "btn-primary" : "btn-secondary"} btn-block`}
-                >
-                  {isPremium ? "Falar com a equipe" : "Selecionar plano"}
-                </button>
-              }
+              features={p.features}
+              ctaLabel={p.ctaLabel}
+              featured={p.featured}
+              selected={selected.id === p.id}
+              onSelect={() => setSelected(p)}
             />
-          );
-        })}
-      </div>
+          ))}
+        </div>
 
-      <section className="mx-auto max-w-2xl rounded-xl border border-line bg-paper p-8">
-        <h2 className="display-md mb-4">Como funciona o pagamento?</h2>
-        <ul className="flex flex-col gap-3 text-sm text-ink-2">
-          <li>
-            <strong className="text-navy">Recorrente mensal.</strong> Cartao ou
-            boleto. Voce escolhe no checkout.
-          </li>
-          <li>
-            <strong className="text-navy">Sem fidelidade.</strong> Cancele a
-            qualquer momento — cobranca para no mes seguinte.
-          </li>
-          <li>
-            <strong className="text-navy">Concierge no Premium.</strong> A
-            curadoria humana entrega de 3 a 5 perfis no seu e-mail por busca.
-          </li>
-          <li>
-            <strong className="text-navy">Mock no v0.</strong> Checkout abaixo e
-            visual — sem gateway real ainda.
-          </li>
-        </ul>
-      </section>
+        <div className="mx-auto max-w-2xl rounded-2xl border border-line bg-offwhite p-8 shadow-1">
+          <PaymentForm
+            mode="credito"
+            resumoLabel={`${PACKS.find((p) => p.id === selected.id)?.eyebrow} · ${selected.precoLabel}`}
+            resumoValor={selected.preco}
+            ctaLabel="Comprar creditos"
+          />
+        </div>
+      </div>
     </AppShell>
   );
 }

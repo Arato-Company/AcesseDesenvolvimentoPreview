@@ -1,312 +1,229 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment } from "react";
+import { MapPin, Users, ShieldCheck, Sliders } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { FormField } from "@/components/FormField";
 import cidades from "@/data/cidades.json";
 import areas from "@/data/areas.json";
-import type { Area, Cidade, RegimeContratacao } from "@/types";
+import type { Area, Cidade } from "@/types";
 
 const cidadesTyped = cidades as Cidade[];
 const areasTyped = areas as Area[];
 
-const REGIMES: RegimeContratacao[] = [
-  "CLT",
-  "PJ",
-  "Temporario",
-  "Estagio",
-  "Freelancer",
+const STEPS = ["Tutorial", "Detalhes", "Requisitos", "Criar"];
+
+const BENEFICIOS = [
+  {
+    icon: MapPin,
+    label: "Candidatos da regiao",
+    text: "Apenas perfis do Circuito das Aguas. Sem ruido nacional.",
+  },
+  {
+    icon: Users,
+    label: "Perfil padronizado",
+    text: "Curriculo formatado por curadoria humana antes de chegar pra voce.",
+  },
+  {
+    icon: ShieldCheck,
+    label: "Curadoria humana",
+    text: "Nossa equipe valida cadastros antes da vitrine. SLA 48h.",
+  },
+  {
+    icon: Sliders,
+    label: "Voce no controle",
+    text: "Tabula filtros por experiencia, area e disponibilidade — direto.",
+  },
 ];
 
-const STEPS = [
-  { num: "01", label: "Tutorial" },
-  { num: "02", label: "Detalhes" },
-  { num: "03", label: "Requisitos" },
-  { num: "04", label: "Publicar" },
-] as const;
-
 /**
- * /empresa/vaga/nova — fonte: Web/05 - Publicar Vaga.html.
- * Stepper de 4 passos. Passo 1 e tutorial (4 bullets), 2-3 formulario,
- * 4 revisao. State local — mock sem persistencia.
+ * /empresa/vaga/nova — W05. Stepper horizontal + tutorial card + form.
+ * Inputs underline. Cidade = select 9 Circuito (nao input livre).
  */
 export default function PublicarVagaPage() {
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
-    titulo: "",
-    area: "",
-    cidade: "",
-    regime: "CLT" as RegimeContratacao,
-    salarioMin: "",
-    salarioMax: "",
-    resumo: "",
-    requisitos: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
-  const prev = () => setStep((s) => Math.max(s - 1, 0));
-
   return (
-    <AppShell
-      audience="empresa"
-      topbarTitle="Publicar vaga"
-      topbarUserLabel="CA"
-    >
+    <AppShell audience="empresa" topbarTitle="Publicar vaga">
       <div className="mx-auto max-w-3xl">
-        <header className="mb-8">
-          <p className="caps mb-2">Vagas</p>
-          <h1 className="display-lg">Publicar uma vaga</h1>
-          <p className="mt-2 text-ink-2">
-            Sem letra miuda. Voce cria a vaga em 2 minutos — a gente entrega
-            candidatos da regiao.
-          </p>
-        </header>
-
+        {/* Stepper */}
         <div className="stepper">
-          {STEPS.map((s, i) => (
-            <div key={s.num} className="flex flex-1 items-center gap-2">
-              <div
-                className={`step ${i < step ? "done" : ""} ${i === step ? "active" : ""}`}
-              >
-                <span className="step-num-circle">
-                  {i < step ? "✓" : s.num}
-                </span>
-                <span className="step-label hidden sm:inline">{s.label}</span>
-              </div>
-              {i < STEPS.length - 1 ? <span className="step-bar" /> : null}
-            </div>
-          ))}
+          {STEPS.map((label, i) => {
+            const stateClass = i === 0 ? "active" : "";
+            return (
+              <Fragment key={label}>
+                <div className={`step ${stateClass}`}>
+                  <span className="step-num-circle">{i + 1}</span>
+                  <span className="step-label">{label}</span>
+                </div>
+                {i < STEPS.length - 1 ? (
+                  <span className="step-bar" />
+                ) : null}
+              </Fragment>
+            );
+          })}
         </div>
 
-        {step === 0 ? (
-          <section className="rounded-xl border border-line bg-offwhite p-10 shadow-1">
-            <p className="caps mb-3">Passo 01 · Tutorial</p>
-            <h2 className="display-md mb-6">Por que publicar a vaga aqui?</h2>
-            <div className="mb-8 grid gap-6 md:grid-cols-2">
-              {[
-                {
-                  t: "Candidatos da regiao",
-                  d: "Sua vaga aparece pra profissionais do Circuito das Aguas — sem CV cego, sem perfil de fora.",
-                },
-                {
-                  t: "Perfil padronizado",
-                  d: "Cada candidato preenche os mesmos campos. Voce compara maca com maca.",
-                },
-                {
-                  t: "Curadoria humana",
-                  d: "Os perfis com selo ✦ Curado passaram por avaliacao manual da equipe regional.",
-                },
-                {
-                  t: "Voce no controle",
-                  d: "Filtra por area, senioridade, cidade. Fala direto via WhatsApp.",
-                },
-              ].map((b) => (
-                <div key={b.t}>
-                  <p className="caps mb-2">{b.t}</p>
-                  <p className="text-ink-2">{b.d}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm italic text-ink-2">
-              Nos proximos passos: detalhes da vaga e requisitos. Depois e so
-              publicar.
-            </p>
-          </section>
-        ) : step === 1 ? (
-          <section className="rounded-xl border border-line bg-offwhite p-10 shadow-1">
-            <p className="caps mb-3">Passo 02 · Detalhes</p>
-            <h2 className="display-md mb-8">Informacoes da vaga</h2>
-            <div className="flex flex-col gap-6">
-              <FormField
-                label="Titulo da vaga"
-                value={form.titulo}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, titulo: e.target.value }))
-                }
-                placeholder="Ex: Tecnica de enfermagem - PS 12x36"
-              />
-              <div className="grid gap-6 md:grid-cols-2">
-                <FormField
-                  as="select"
-                  label="Area"
-                  value={form.area}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, area: e.target.value }))
-                  }
-                >
-                  <option value="">Selecione</option>
-                  {areasTyped.map((a) => (
-                    <option key={a.slug} value={a.slug}>
-                      {a.nome}
-                    </option>
-                  ))}
-                </FormField>
-                <FormField
-                  as="select"
-                  label="Cidade"
-                  value={form.cidade}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, cidade: e.target.value }))
-                  }
-                  help="Apenas cidades do Circuito das Aguas."
-                >
-                  <option value="">Selecione</option>
-                  {cidadesTyped.map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.nome}
-                    </option>
-                  ))}
-                </FormField>
-              </div>
-              <div className="grid gap-6 md:grid-cols-3">
-                <FormField
-                  as="select"
-                  label="Regime"
-                  value={form.regime}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      regime: e.target.value as RegimeContratacao,
-                    }))
-                  }
-                >
-                  {REGIMES.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </FormField>
-                <FormField
-                  label="Salario min (R$)"
-                  type="number"
-                  inputMode="numeric"
-                  value={form.salarioMin}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, salarioMin: e.target.value }))
-                  }
-                  placeholder="2400"
-                />
-                <FormField
-                  label="Salario max (R$)"
-                  type="number"
-                  inputMode="numeric"
-                  value={form.salarioMax}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, salarioMax: e.target.value }))
-                  }
-                  placeholder="2900"
-                />
-              </div>
-              <FormField
-                as="textarea"
-                label="Descricao curta (pitch)"
-                value={form.resumo}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, resumo: e.target.value }))
-                }
-                placeholder="Uma frase impactante que resume a vaga..."
-                rows={3}
-              />
-            </div>
-          </section>
-        ) : step === 2 ? (
-          <section className="rounded-xl border border-line bg-offwhite p-10 shadow-1">
-            <p className="caps mb-3">Passo 03 · Requisitos</p>
-            <h2 className="display-md mb-8">O que voce procura</h2>
-            <FormField
-              as="textarea"
-              label="Requisitos e beneficios"
-              value={form.requisitos}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, requisitos: e.target.value }))
-              }
-              placeholder="Ex: COREN ativo, escala 12x36, vale-transporte e refeicao no local. CIPA desejavel."
-              rows={6}
-              help="Liste 4 a 6 itens objetivos. Quanto mais claro, melhor."
-            />
-          </section>
-        ) : (
-          <section className="rounded-xl border border-gold bg-offwhite p-10 shadow-gold">
-            <p className="caps mb-3">Passo 04 · Publicar</p>
-            <h2 className="display-md mb-6">Revise antes de publicar</h2>
-            <dl className="mb-8 grid gap-4 md:grid-cols-2">
-              <div>
-                <dt className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                  Titulo
-                </dt>
-                <dd className="mt-1 text-navy">
-                  {form.titulo || (
-                    <span className="text-ink-3">(em branco)</span>
-                  )}
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                  Cidade · Area
-                </dt>
-                <dd className="mt-1 text-navy">
-                  {form.cidade || "—"} · {form.area || "—"}
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                  Regime · Faixa
-                </dt>
-                <dd className="mt-1 text-navy">
-                  {form.regime}
-                  {form.salarioMin ? ` · R$ ${form.salarioMin}` : ""}
-                  {form.salarioMax ? ` – R$ ${form.salarioMax}` : ""}
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                  Pitch
-                </dt>
-                <dd className="mt-1 text-ink-2">
-                  {form.resumo || (
-                    <span className="text-ink-3">(em branco)</span>
-                  )}
-                </dd>
-              </div>
-            </dl>
-            {submitted ? (
-              <div className="rounded-lg border border-success/40 bg-success/10 p-4 text-sm text-navy">
-                Mock — vaga enviada pra curadoria. Em produto real, a equipe
-                aprova em ate 24h.
-              </div>
-            ) : null}
-          </section>
-        )}
+        {/* Tutorial card */}
+        <section className="rounded-lg border border-line bg-offwhite p-12">
+          <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+            Passo 1 · Tutorial
+          </p>
+          <h2 className="mt-2 font-display text-2xl font-semibold text-navy">
+            Por que publicar a vaga aqui?
+          </h2>
+          <p className="mt-2 max-w-xl text-base text-ink-2">
+            Diferente de plataformas nacionais, a Acesse trabalha so o recorte
+            regional do Circuito das Aguas. Voce ganha:
+          </p>
 
-        <div className="mt-8 flex items-center justify-between">
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={prev}
-            disabled={step === 0}
-          >
+          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            {BENEFICIOS.map((b) => {
+              const Icon = b.icon;
+              return (
+                <div key={b.label} className="flex gap-3">
+                  <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-deep">
+                    <Icon size={18} strokeWidth={1.7} />
+                  </span>
+                  <div>
+                    <p className="font-mono text-2xs uppercase tracking-widest text-navy">
+                      {b.label}
+                    </p>
+                    <p className="text-sm text-ink-2">{b.text}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Form */}
+        <section className="mt-8 rounded-lg border border-line bg-offwhite p-12">
+          <h2 className="font-display text-2xl font-semibold text-navy">
+            Informacoes da vaga
+          </h2>
+          <p className="mt-1 text-sm text-ink-2">
+            Preencha o essencial — voce ajusta requisitos no proximo passo.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-5">
+            <UnderlineField
+              label="Titulo da oportunidade"
+              id="titulo"
+              placeholder="Ex: Recepcionista bilingue · resort"
+            />
+
+            <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
+              <UnderlineSelect label="Area" id="area">
+                <option value="">Selecione a area</option>
+                {areasTyped.map((a) => (
+                  <option key={a.slug} value={a.slug}>
+                    {a.nome}
+                  </option>
+                ))}
+              </UnderlineSelect>
+              <UnderlineSelect label="Senioridade" id="senioridade">
+                <option value="">Selecione</option>
+                <option value="Junior">Junior</option>
+                <option value="Pleno">Pleno</option>
+                <option value="Senior">Senior</option>
+                <option value="Especialista">Especialista</option>
+              </UnderlineSelect>
+              <UnderlineSelect label="Cidade" id="cidade">
+                <option value="">Selecione a cidade</option>
+                {cidadesTyped.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.nome}
+                  </option>
+                ))}
+              </UnderlineSelect>
+              <UnderlineSelect label="Modalidade" id="modalidade">
+                <option value="">Selecione</option>
+                <option value="presencial">Presencial</option>
+                <option value="hibrido">Hibrido</option>
+                <option value="remoto">Remoto</option>
+              </UnderlineSelect>
+              <UnderlineSelect label="Tipo de contrato" id="tipo">
+                <option value="">Selecione</option>
+                <option value="CLT">CLT</option>
+                <option value="PJ">PJ</option>
+                <option value="Temporario">Temporario</option>
+                <option value="Estagio">Estagio</option>
+              </UnderlineSelect>
+              <UnderlineField
+                label="Faixa salarial"
+                id="salario"
+                placeholder="R$ 2.500 – R$ 3.200"
+              />
+            </div>
+
+            <div>
+              <label className="field-label" htmlFor="descricao">
+                Descricao
+              </label>
+              <textarea
+                id="descricao"
+                rows={3}
+                placeholder="Resumo da rotina, expectativas e diferenciais"
+                className="field-textarea"
+              />
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-8 flex justify-between">
+          <button type="button" className="btn btn-ghost">
             ← Voltar
           </button>
-          {step < STEPS.length - 1 ? (
-            <button
-              type="button"
-              className="btn btn-primary btn-lg"
-              onClick={next}
-            >
-              Proximo passo →
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-gold btn-lg"
-              onClick={() => setSubmitted(true)}
-            >
-              Publicar vaga
-            </button>
-          )}
+          <button type="submit" className="btn btn-primary btn-lg">
+            Proximo passo →
+          </button>
         </div>
       </div>
     </AppShell>
+  );
+}
+
+function UnderlineField({
+  label,
+  id,
+  placeholder,
+}: {
+  label: string;
+  id: string;
+  placeholder: string;
+}) {
+  return (
+    <div>
+      <label className="field-label" htmlFor={id}>
+        {label}
+      </label>
+      <input
+        id={id}
+        placeholder={placeholder}
+        className="w-full border-b border-line bg-transparent py-3 text-base text-ink-1 placeholder:text-ink-3 outline-none transition focus:border-gold"
+      />
+    </div>
+  );
+}
+
+function UnderlineSelect({
+  label,
+  id,
+  children,
+}: {
+  label: string;
+  id: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="field-label" htmlFor={id}>
+        {label}
+      </label>
+      <select
+        id={id}
+        className="w-full border-b border-line bg-transparent py-3 text-base text-ink-1 outline-none transition focus:border-gold"
+      >
+        {children}
+      </select>
+    </div>
   );
 }

@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { SlidersHorizontal } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { CardCandidato } from "@/components/CardCandidato";
+import { FavoriteProfileCard } from "@/components/FavoriteProfileCard";
 import candidatos from "@/data/candidatos.json";
 import type { Candidato } from "@/types";
 
@@ -17,64 +18,101 @@ const SEED_FAVORITOS: string[] = [
   "cand-009",
 ];
 
+const TABS = ["MAIS RECENTES", "MAIOR MATCH", "POR AREA"];
+
+const PRETENSAO_MOCK: Record<string, string> = {
+  "cand-001": "R$ 5.500",
+  "cand-002": "R$ 3.200",
+  "cand-003": "R$ 4.100",
+  "cand-006": "R$ 3.800",
+  "cand-009": "R$ 6.200",
+};
+
+const DISPONIBILIDADE_MOCK: Record<string, string> = {
+  "cand-001": "Imediata",
+  "cand-002": "30 dias",
+  "cand-003": "15 dias",
+  "cand-006": "Imediata",
+  "cand-009": "Imediata",
+};
+
 /**
- * /empresa/favoritos — fonte: Web/07 - Favoritos.html.
- * Lista candidatos salvos. Estado client-only (v0 nao persiste).
- * Permite remover; quando vazio, mostra empty state com link pra Vitrine.
+ * /empresa/favoritos — W07. Grid 2-col com FavoriteProfileCard.
+ * Tabs ordenacao, status contato em localStorage, WhatsApp em vez de chat interno.
  */
 export default function FavoritosPage() {
   const [favoritos, setFavoritos] = useState<string[]>(SEED_FAVORITOS);
+  const [aba, setAba] = useState(TABS[0]);
 
-  const candidatosFav = useMemo(
-    () =>
-      favoritos
-        .map((id) => candidatosTyped.find((c) => c.id === id))
-        .filter((c): c is Candidato => Boolean(c)),
-    [favoritos],
-  );
+  const candidatosFav = useMemo(() => {
+    const lista = favoritos
+      .map((id) => candidatosTyped.find((c) => c.id === id))
+      .filter((c): c is Candidato => Boolean(c));
+
+    if (aba === "MAIOR MATCH") {
+      return [...lista].sort((a, b) => b.matchScore - a.matchScore);
+    }
+    if (aba === "POR AREA") {
+      return [...lista].sort((a, b) => a.area.localeCompare(b.area));
+    }
+    return lista;
+  }, [favoritos, aba]);
 
   const remover = (id: string) =>
     setFavoritos((prev) => prev.filter((x) => x !== id));
-
-  const limpar = () => setFavoritos([]);
 
   return (
     <AppShell
       audience="empresa"
       topbarTitle="Favoritos"
-      topbarUserLabel="CA"
+      topbarUserLabel="EM"
     >
-      <header className="mb-10 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="caps mb-2">Salvos</p>
-          <h1 className="display-lg">
-            {candidatosFav.length} perfis{" "}
-            <span className="text-ink-3">salvos</span>
-          </h1>
-          <p className="mt-2 text-sm text-ink-2">
-            Lista local desta sessao. Em producao, os favoritos ficam vinculados
-            a conta empresa.
-          </p>
-        </div>
-        {candidatosFav.length > 0 ? (
-          <button
-            type="button"
-            className="btn btn-ghost btn-sm"
-            onClick={limpar}
-          >
-            Limpar lista
-          </button>
-        ) : null}
+      <header className="mb-10">
+        <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+          Curadoria propria
+        </p>
+        <h1 className="mt-2 font-display text-4xl font-semibold text-navy">
+          Seus favoritos
+        </h1>
+        <p className="mt-2 text-base text-ink-2">
+          {candidatosFav.length} perfis salvos na sua curadoria.
+        </p>
       </header>
+
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-line pb-3">
+        <div className="flex gap-6">
+          {TABS.map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setAba(t)}
+              className={`relative pb-3 font-mono text-2xs uppercase tracking-widest transition ${
+                aba === t ? "text-navy" : "text-ink-3 hover:text-navy"
+              }`}
+            >
+              {t}
+              {aba === t ? (
+                <span className="absolute -bottom-px left-0 right-0 h-0.5 bg-gold" />
+              ) : null}
+            </button>
+          ))}
+        </div>
+        <button type="button" className="btn btn-secondary btn-sm">
+          <SlidersHorizontal size={14} strokeWidth={1.7} />
+          Filtros avancados
+        </button>
+      </div>
 
       {candidatosFav.length === 0 ? (
         <div className="empty-state">
           <p className="font-mono text-2xs uppercase tracking-widest text-ink-3">
             Lista vazia
           </p>
-          <h3 className="display-md">Nenhum perfil salvo ainda.</h3>
+          <h3 className="font-display text-2xl font-semibold text-navy">
+            Nenhum perfil salvo ainda.
+          </h3>
           <p className="max-w-md text-sm text-ink-2">
-            Salve candidatos enquanto navega pela Vitrine para revisar com calma
+            Salve candidatos enquanto navega pela Vitrine pra revisar com calma
             depois ou compartilhar com o time.
           </p>
           <Link href="/empresa/vitrine" className="btn btn-primary">
@@ -82,31 +120,15 @@ export default function FavoritosPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {candidatosFav.map((c) => (
-            <div key={c.id} className="relative">
-              <CardCandidato candidato={c} />
-              <button
-                type="button"
-                onClick={() => remover(c.id)}
-                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-line bg-offwhite text-ink-2 shadow-2 transition hover:border-gold hover:text-gold-deep"
-                aria-label={`Remover ${c.nome} dos favoritos`}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.7}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+            <FavoriteProfileCard
+              key={c.id}
+              candidato={c}
+              pretensao={PRETENSAO_MOCK[c.id]}
+              disponibilidade={DISPONIBILIDADE_MOCK[c.id]}
+              onRemove={() => remover(c.id)}
+            />
           ))}
         </div>
       )}
