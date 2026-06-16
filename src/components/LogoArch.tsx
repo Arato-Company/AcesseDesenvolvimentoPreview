@@ -1,34 +1,31 @@
+import Image from "next/image";
+
 type LogoArchProps = {
   className?: string;
+  width?: number;
+  height?: number;
 };
 
 /**
- * SVG do "arco" do logo (mesma marca usada em LP + topbar autenticada + footer).
- * Mantemos como componente puro pra reutilizar nos 3 contextos sem duplicar SVG.
+ * Logo da marca (LogoOriginal otimizado em /logo.webp).
+ * Mantemos o nome `LogoArch` por compatibilidade com call sites (LP,
+ * Header, Footer, AppShell, CandidatoLayout). Decorativo: o wordmark
+ * adjacente ja anuncia "Acesse Desenvolvimento" — alt vazio + aria-hidden.
  */
-export function LogoArch({ className }: LogoArchProps) {
+export function LogoArch({ className, width = 40, height = 40 }: LogoArchProps) {
   return (
-    <span className={`logo-arch ${className ?? ""}`} aria-hidden="true">
-      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M6 28V14a10 10 0 0 1 20 0v14"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M4 28h24"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M9 28V18M23 28V18"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="square"
-        />
-      </svg>
+    <span
+      className={`logo-arch inline-flex items-center ${className ?? ""}`}
+      aria-hidden="true"
+    >
+      <Image
+        src="/logo.webp"
+        alt=""
+        width={width}
+        height={height}
+        priority
+        className="h-auto w-auto object-contain"
+      />
     </span>
   );
 }
