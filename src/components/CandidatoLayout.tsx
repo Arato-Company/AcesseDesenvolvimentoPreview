@@ -139,7 +139,14 @@ export function CandidatoLayout({
         <main className={noFrame ? "" : "px-5 pb-12 pt-6"}>{children}</main>
 
         {hideBottomNav ? null : (
-          <nav className="bottom-nav" aria-label="Navegacao candidato">
+          // Override grid-template-columns inline: tokens.css usa repeat(4,1fr)
+          // default; BOTTOM_NAV tem 3 itens (decisao Batch 2/3, sem mexer em
+          // tokens.css conforme PM).
+          <nav
+            className="bottom-nav"
+            style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
+            aria-label="Navegacao candidato"
+          >
             {BOTTOM_NAV.map((item) => {
               const isActive =
                 pathname === item.href ||
