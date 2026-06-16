@@ -1,213 +1,236 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { AppShell } from "@/components/AppShell";
-import { FormField } from "@/components/FormField";
-import { allAreas, allCidades } from "@/data/lookups";
+import { useState } from "react";
+import { Send, Users, Building2, Globe, Search } from "lucide-react";
+import { AppAdminShell } from "@/components/AppAdminShell";
+import { RadioCard } from "@/components/RadioCard";
+import { RecipientPill } from "@/components/RecipientPill";
 
-type Canal = "email" | "whatsapp";
-type Publico = "candidatos" | "empresas" | "todos";
+type Audience = "todos" | "empresas" | "candidatos";
 
-type Envio = {
-  id: string;
-  data: string;
-  canal: Canal;
-  publico: Publico;
-  area: string;
-  cidade: string;
-  assunto: string;
-  alcance: number;
-};
-
-const HISTORICO: Envio[] = [
-  {
-    id: "env-001",
-    data: "2026-06-06",
-    canal: "email",
-    publico: "candidatos",
-    area: "Turismo",
-    cidade: "Serra Negra",
-    assunto: "120 vagas em hoteis da regiao",
-    alcance: 87,
-  },
-  {
-    id: "env-002",
-    data: "2026-06-03",
-    canal: "whatsapp",
-    publico: "empresas",
-    area: "Todas",
-    cidade: "Todas",
-    assunto: "Politica de reembolso atualizada",
-    alcance: 5,
-  },
-  {
-    id: "env-003",
-    data: "2026-05-28",
-    canal: "email",
-    publico: "todos",
-    area: "Todas",
-    cidade: "Amparo",
-    assunto: "Hospital Sao Lucas abriu novo edital",
-    alcance: 142,
-  },
+const SUGGESTIONS = [
+  "Termas Serra Verde",
+  "Cooperativa Holambra Flores",
+  "Hospital Sao Lucas Amparo",
+  "Joao Pedro Silva",
+  "Mariana Costa",
+  "Ana Beatriz Souza",
 ];
 
 /**
- * /admin/comunicacao — fonte: Web/16 - Admin Comunicacao.html.
- * Composer + historico de envios. v0: mock, sem disparo real.
+ * /admin/comunicacao — W16. Coluna unica + modal busca "+ ADICIONAR".
+ * CTA "Enviar" no footer do AppAdminSidebar.
  */
 export default function AdminComunicacaoPage() {
-  const [canal, setCanal] = useState<Canal>("email");
-  const [publico, setPublico] = useState<Publico>("candidatos");
-  const [area, setArea] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [assunto, setAssunto] = useState("");
-  const [mensagem, setMensagem] = useState("");
-  const [enviado, setEnviado] = useState(false);
+  const [audience, setAudience] = useState<Audience>("todos");
+  const [recipients, setRecipients] = useState<string[]>([
+    "Termas Serra Verde",
+    "Joao Pedro Silva",
+  ]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [query, setQuery] = useState("");
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setEnviado(true);
-    setTimeout(() => setEnviado(false), 4000);
+  const adicionar = (label: string) => {
+    if (!recipients.includes(label)) setRecipients((r) => [...r, label]);
+    setModalOpen(false);
+    setQuery("");
   };
 
+  const remover = (label: string) =>
+    setRecipients((r) => r.filter((x) => x !== label));
+
+  const filtered = SUGGESTIONS.filter(
+    (s) =>
+      s.toLowerCase().includes(query.toLowerCase()) && !recipients.includes(s),
+  );
+
   return (
-    <AppShell
-      audience="admin"
+    <AppAdminShell
       topbarTitle="Comunicacao"
-      topbarUserLabel="AD"
+      sidebarFooter={
+        <button className="btn btn-gold btn-block">
+          <Send size={14} strokeWidth={1.7} />
+          Enviar e-mail
+        </button>
+      }
     >
-      <header className="mb-10">
-        <p className="caps mb-2">Disparo de mensagens</p>
-        <h1 className="display-lg">Composer da curadoria.</h1>
-        <p className="mt-2 text-sm text-ink-2">
-          Email transacional ou WhatsApp Business pra candidatos e empresas.
-          Sem chat interno. Mensagens passam por revisao antes do envio.
+      <div className="mx-auto max-w-3xl px-2 py-2">
+        <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+          Comunicacao
         </p>
-      </header>
+        <h1 className="mt-1 font-display text-3xl font-semibold text-navy">
+          Enviar e-mail
+        </h1>
+        <p className="mt-2 text-base text-ink-2">
+          Componha uma mensagem para a base. Marca neutra Acesse, sem
+          identificacao pessoal.
+        </p>
 
-      <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-        <form
-          onSubmit={onSubmit}
-          className="rounded-xl border border-line bg-offwhite p-6 shadow-1"
-        >
-          <div className="grid gap-5">
-            <div className="grid gap-5 md:grid-cols-2">
-              <FormField
-                as="select"
-                label="Canal"
-                value={canal}
-                onChange={(e) => setCanal(e.target.value as Canal)}
-              >
-                <option value="email">Email</option>
-                <option value="whatsapp">WhatsApp Business</option>
-              </FormField>
-              <FormField
-                as="select"
-                label="Publico"
-                value={publico}
-                onChange={(e) => setPublico(e.target.value as Publico)}
-              >
-                <option value="candidatos">Candidatos</option>
-                <option value="empresas">Empresas</option>
-                <option value="todos">Todos</option>
-              </FormField>
-            </div>
+        <div className="mt-8 flex flex-col gap-4">
+          <input
+            type="text"
+            placeholder="Titulo do e-mail"
+            className="w-full border-b border-line bg-transparent py-3 font-display text-2xl font-semibold text-navy placeholder:text-ink-3 outline-none transition focus:border-gold"
+          />
+          <textarea
+            placeholder="Escreva a mensagem..."
+            rows={10}
+            className="field-textarea"
+          />
+        </div>
 
-            <div className="grid gap-5 md:grid-cols-2">
-              <FormField
-                as="select"
-                label="Filtro por area"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
-              >
-                <option value="">Todas areas</option>
-                {allAreas.map((a) => (
-                  <option key={a.slug} value={a.slug}>
-                    {a.nome}
-                  </option>
-                ))}
-              </FormField>
-              <FormField
-                as="select"
-                label="Filtro por cidade"
-                value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-              >
-                <option value="">Todas cidades</option>
-                {allCidades.map((c) => (
-                  <option key={c.slug} value={c.slug}>
-                    {c.nome}
-                  </option>
-                ))}
-              </FormField>
-            </div>
+        <hr className="my-10 border-line" />
 
-            <FormField
-              label="Assunto"
-              placeholder="Novas vagas em Serra Negra"
-              value={assunto}
-              onChange={(e) => setAssunto(e.target.value)}
-              required
+        <div>
+          <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+            Quem recebe
+          </p>
+          <h2 className="mt-1 font-display text-xl font-semibold text-navy">
+            Audiencia
+          </h2>
+
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <RadioCard
+              name="audience"
+              value="todos"
+              label="Todos"
+              description="Toda a base ativa Acesse"
+              icon={Globe}
+              checked={audience === "todos"}
+              onChange={(v) => setAudience(v as Audience)}
             />
-
-            <FormField
-              as="textarea"
-              label="Mensagem"
-              rows={6}
-              placeholder="Ola! Selecionamos 12 vagas que combinam com seu perfil em Serra Negra..."
-              value={mensagem}
-              onChange={(e) => setMensagem(e.target.value)}
-              help="Use {{nome}} e {{cidade}} pra personalizar."
-              required
+            <RadioCard
+              name="audience"
+              value="empresas"
+              label="Empresas"
+              description="67 contas parceiras"
+              icon={Building2}
+              checked={audience === "empresas"}
+              onChange={(v) => setAudience(v as Audience)}
             />
+            <RadioCard
+              name="audience"
+              value="candidatos"
+              label="Candidatos"
+              description="432 perfis ativos"
+              icon={Users}
+              checked={audience === "candidatos"}
+              onChange={(v) => setAudience(v as Audience)}
+            />
+          </div>
+        </div>
 
-            {enviado ? (
-              <div className="rounded-md border border-gold/40 bg-gold/10 p-4 text-sm text-gold-deep">
-                ✦ Mensagem enviada pra fila de aprovacao. Curadoria revisa em
-                ate 2h antes do disparo.
-              </div>
-            ) : null}
-
-            <div className="flex items-center justify-between gap-3 border-t border-line pt-5">
-              <p className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                CURADORIA · revisao manual antes do disparo
-              </p>
+        <div className="mt-10 rounded-xl border border-line bg-offwhite p-6">
+          <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <span className="font-mono text-2xs uppercase tracking-widest text-ink-2">
+              Destinatarios · {recipients.length}
+            </span>
+            <div className="flex gap-3">
               <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={!assunto.trim() || !mensagem.trim()}
+                type="button"
+                className="font-mono text-2xs uppercase tracking-widest text-navy transition hover:text-gold-deep"
               >
-                Enviar pra fila
+                Selecionar todos
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalOpen(true)}
+                className="font-mono text-2xs uppercase tracking-widest text-gold-deep transition hover:text-navy"
+              >
+                + Adicionar
+              </button>
+            </div>
+          </header>
+
+          <div className="relative">
+            <Search
+              size={14}
+              strokeWidth={1.7}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3"
+            />
+            <input
+              type="search"
+              placeholder="Buscar nos destinatarios"
+              className="w-full rounded-md border border-line bg-paper py-2 pl-9 pr-3 font-mono text-2xs uppercase tracking-widest text-ink-2 outline-none focus:border-gold"
+            />
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {recipients.length === 0 ? (
+              <p className="text-sm text-ink-3">
+                Nenhum destinatario adicionado.
+              </p>
+            ) : (
+              recipients.map((r) => (
+                <RecipientPill
+                  key={r}
+                  label={r}
+                  onRemove={() => remover(r)}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
+      {modalOpen ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-navy-deep/40 backdrop-blur-sm"
+          onClick={() => setModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-line bg-offwhite p-6 shadow-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="mb-4 font-display text-xl font-semibold text-navy">
+              Adicionar destinatario
+            </h3>
+            <div className="relative">
+              <Search
+                size={14}
+                strokeWidth={1.7}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3"
+              />
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar candidato ou empresa..."
+                className="w-full rounded-md border border-line bg-offwhite py-2 pl-9 pr-3 text-sm outline-none focus:border-gold"
+              />
+            </div>
+            <ul className="mt-4 max-h-64 divide-y divide-line overflow-y-auto">
+              {filtered.map((s) => (
+                <li key={s}>
+                  <button
+                    type="button"
+                    onClick={() => adicionar(s)}
+                    className="w-full px-2 py-3 text-left text-sm text-navy transition hover:bg-paper"
+                  >
+                    {s}
+                  </button>
+                </li>
+              ))}
+              {filtered.length === 0 ? (
+                <li className="py-3 text-sm text-ink-3">
+                  Nenhum resultado encontrado.
+                </li>
+              ) : null}
+            </ul>
+            <div className="mt-4 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                className="btn btn-ghost btn-sm"
+              >
+                Cancelar
               </button>
             </div>
           </div>
-        </form>
-
-        <section className="rounded-xl border border-line bg-offwhite p-6 shadow-1">
-          <h2 className="mb-5 font-display text-lg font-semibold text-navy">
-            Historico recente
-          </h2>
-          <ul className="divide-y divide-line">
-            {HISTORICO.map((h) => (
-              <li key={h.id} className="py-4 first:pt-0 last:pb-0">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="font-semibold text-navy">{h.assunto}</p>
-                  <span className="rounded-full bg-paper px-2 py-0.5 font-mono text-2xs uppercase tracking-widest text-gold-deep">
-                    {h.canal}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-ink-2">
-                  {h.publico} · {h.area} · {h.cidade}
-                </p>
-                <p className="mt-2 font-mono text-2xs uppercase tracking-widest text-ink-3">
-                  {h.data} · {h.alcance} destinatarios
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
-    </AppShell>
+        </div>
+      ) : null}
+    </AppAdminShell>
   );
 }

@@ -1,113 +1,209 @@
-import { AppShell } from "@/components/AppShell";
+"use client";
+
+import { useState } from "react";
+import {
+  Inbox,
+  UserCheck,
+  CalendarCheck,
+  Sparkles,
+  ShieldCheck,
+  SlidersHorizontal,
+} from "lucide-react";
+import { AppAdminShell } from "@/components/AppAdminShell";
+import type { AdminNavItem } from "@/components/AppAdminSidebar";
+import { Avatar } from "@/components/Avatar";
 import candidatos from "@/data/candidatos.json";
-import empresas from "@/data/empresas.json";
-import { areaNome, cidadeNome } from "@/data/lookups";
-import type { Candidato, Empresa } from "@/types";
+import { cidadeNome } from "@/data/lookups";
+import type { Candidato, PlanoCandidato } from "@/types";
 
 const candidatosTyped = candidatos as Candidato[];
-const empresasTyped = empresas as Empresa[];
 
-type Pendente =
-  | { tipo: "candidato"; ref: Candidato }
-  | { tipo: "empresa"; ref: Empresa };
+const CURADORIA_NAV: AdminNavItem[] = [
+  { href: "/admin/curadoria", label: "Fila de triagem", icon: Inbox },
+  { href: "/admin/curadoria", label: "Perfis pendentes", icon: UserCheck },
+  {
+    href: "/admin/curadoria",
+    label: "Publicados hoje",
+    icon: CalendarCheck,
+  },
+];
+
+const PLANO_BADGE: Record<PlanoCandidato, string> = {
+  premium: "bg-gold/20 text-gold-deep",
+  destaque: "bg-paper text-navy",
+  start: "bg-paper text-ink-2",
+};
+const PLANO_LABEL: Record<PlanoCandidato, string> = {
+  premium: "Premium",
+  destaque: "Destaque",
+  start: "Start",
+};
 
 /**
- * /admin/curadoria — fonte: Web/09 - Admin Curadoria.html.
- * Lista de candidatos+empresas pendentes de revisao. Acoes nao-funcionais (demo).
+ * /admin/curadoria — W09. Fila de triagem + preview card.
+ * Usa `AppAdminSidebar` com prop `navItems` override (3 itens proprios).
  */
 export default function AdminCuradoriaPage() {
-  const candidatosPendentes = candidatosTyped.filter((c) => !c.curado);
-  const empresasPendentes = empresasTyped.filter((e) => e.plano === "basico");
-
-  const pendentes: Pendente[] = [
-    ...candidatosPendentes.map<Pendente>((c) => ({ tipo: "candidato", ref: c })),
-    ...empresasPendentes.map<Pendente>((e) => ({ tipo: "empresa", ref: e })),
-  ];
+  const pendentes = candidatosTyped.filter((c) => !c.curado);
+  const [selected, setSelected] = useState<Candidato>(
+    pendentes[0] ?? candidatosTyped[0],
+  );
 
   return (
-    <AppShell audience="admin" topbarTitle="Curadoria" topbarUserLabel="AD">
-      <header className="mb-10 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="caps mb-2">Triagem humana</p>
-          <h1 className="display-lg">
-            {pendentes.length} cadastros{" "}
-            <span className="text-ink-3">pendentes</span>
-          </h1>
-          <p className="mt-2 text-sm text-ink-2">
-            Revise candidatos e empresas antes da publicacao na vitrine. SLA da
-            curadoria: 48h uteis.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <span className="rounded-full bg-paper px-3 py-1 font-mono text-2xs uppercase tracking-widest text-gold-deep">
-            {candidatosPendentes.length} candidatos
-          </span>
-          <span className="rounded-full bg-paper px-3 py-1 font-mono text-2xs uppercase tracking-widest text-gold-deep">
-            {empresasPendentes.length} empresas
-          </span>
-        </div>
-      </header>
+    <AppAdminShell
+      navItems={CURADORIA_NAV}
+      activeHref="/admin/curadoria"
+      topbarTitle="Curadoria"
+    >
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
+        <section>
+          <header className="mb-6 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+                Triagem humana
+              </p>
+              <h1 className="font-display text-3xl font-semibold text-navy">
+                Fila de curadoria
+              </h1>
+              <p className="mt-1 text-sm text-ink-2">
+                {pendentes.length} perfis aguardando · SLA 48h uteis
+              </p>
+            </div>
+            <button className="btn btn-secondary btn-sm">
+              <SlidersHorizontal size={14} strokeWidth={1.7} />
+              Filtros
+            </button>
+          </header>
 
-      <div className="overflow-x-auto rounded-xl border border-line bg-offwhite shadow-1">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-paper">
-            <tr className="text-2xs uppercase tracking-widest text-ink-3">
-              <th className="px-5 py-3 font-mono">Tipo</th>
-              <th className="px-5 py-3 font-mono">Nome</th>
-              <th className="px-5 py-3 font-mono">Area</th>
-              <th className="px-5 py-3 font-mono">Cidade</th>
-              <th className="px-5 py-3 font-mono">Status</th>
-              <th className="px-5 py-3 text-right font-mono">Acao</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {pendentes.map((p) => {
-              const id = p.ref.id;
-              const nome = p.ref.nome;
-              const area = areaNome(p.ref.area);
-              const cidade = cidadeNome(p.ref.cidade);
-              const subtitulo =
-                p.tipo === "candidato"
-                  ? (p.ref as Candidato).cargo
-                  : `Porte ${(p.ref as Empresa).porte}`;
-              return (
-                <tr key={`${p.tipo}-${id}`} className="hover:bg-paper/60">
-                  <td className="px-5 py-4">
-                    <span className="rounded-full bg-paper px-2 py-0.5 font-mono text-2xs uppercase tracking-widest text-gold-deep">
-                      {p.tipo}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4">
-                    <p className="font-semibold text-navy">{nome}</p>
-                    <p className="text-xs text-ink-2">{subtitulo}</p>
-                  </td>
-                  <td className="px-5 py-4 text-ink-2">{area}</td>
-                  <td className="px-5 py-4 text-ink-2">{cidade}</td>
-                  <td className="px-5 py-4">
-                    <span className="font-mono text-2xs uppercase tracking-widest text-amber-700">
-                      Pendente
-                    </span>
-                  </td>
-                  <td className="px-5 py-4 text-right">
-                    <div className="inline-flex gap-2">
-                      <button type="button" className="btn btn-ghost btn-sm">
-                        Recusar
-                      </button>
-                      <button type="button" className="btn btn-gold btn-sm">
-                        Aprovar
-                      </button>
-                    </div>
-                  </td>
+          <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-1">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-paper">
+                <tr className="font-mono text-2xs uppercase tracking-widest text-ink-3">
+                  <th className="px-5 py-3">Candidato</th>
+                  <th className="px-5 py-3">Plano</th>
+                  <th className="px-5 py-3">Data entrada</th>
+                  <th className="px-5 py-3 text-right">Acoes</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {pendentes.map((c, i) => (
+                  <tr
+                    key={c.id}
+                    onClick={() => setSelected(c)}
+                    className={`cursor-pointer hover:bg-paper/40 ${
+                      selected.id === c.id ? "bg-paper/60" : ""
+                    }`}
+                  >
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <Avatar name={c.nome} size="md" />
+                          {c.plano === "premium" ? (
+                            <span className="absolute -right-1 -top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-gold text-navy-deep">
+                              <Sparkles size={11} strokeWidth={2.2} />
+                            </span>
+                          ) : null}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-navy">{c.nome}</p>
+                          <p className="text-xs text-ink-2">
+                            {c.cargo} · {cidadeNome(c.cidade)}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4">
+                      <span
+                        className={`rounded-full px-2 py-0.5 font-mono text-2xs uppercase tracking-widest ${PLANO_BADGE[c.plano]}`}
+                      >
+                        {PLANO_LABEL[c.plano]}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 font-mono text-2xs uppercase tracking-widest text-ink-3">
+                      Ha {i + 1}d
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <div className="inline-flex gap-2">
+                        {c.plano === "premium" ? (
+                          <button type="button" className="btn btn-gold btn-sm">
+                            <Sparkles size={11} strokeWidth={2} />
+                            Marcar curado
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-secondary btn-sm"
+                          >
+                            Ajuste
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      <p className="mt-6 font-mono text-2xs uppercase tracking-widest text-ink-3">
-        CURADORIA · acoes nesta tela sao definitivas. Revisao manual obrigatoria.
-      </p>
-    </AppShell>
+        <aside className="sticky top-20 self-start rounded-xl border border-line bg-offwhite p-6 shadow-1">
+          <div className="flex flex-col items-center gap-3 border-b border-line pb-4 text-center">
+            <Avatar name={selected.nome} size="xl" />
+            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-gold-deep to-gold px-3 py-1 font-mono text-2xs font-semibold uppercase tracking-widest text-navy-deep">
+              <Sparkles size={11} strokeWidth={2.2} />
+              Pronto pra curar
+            </span>
+            <h3 className="font-display text-lg font-semibold text-navy">
+              {selected.nome}
+            </h3>
+            <p className="text-xs text-ink-2">
+              {selected.cargo} · {cidadeNome(selected.cidade)}
+            </p>
+          </div>
+
+          <dl className="my-4 grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <dt className="font-mono text-2xs uppercase tracking-widest text-ink-3">
+                Match
+              </dt>
+              <dd className="font-display text-lg font-semibold text-gold-deep">
+                {selected.matchScore}%
+              </dd>
+            </div>
+            <div>
+              <dt className="font-mono text-2xs uppercase tracking-widest text-ink-3">
+                Nivel
+              </dt>
+              <dd className="font-semibold text-navy">{selected.nivel}</dd>
+            </div>
+          </dl>
+
+          <label className="block">
+            <span className="font-mono text-2xs uppercase tracking-widest text-ink-2">
+              Notas da curadoria
+            </span>
+            <textarea
+              className="field-textarea mt-2"
+              rows={3}
+              placeholder="Observacoes internas, ajustes sugeridos..."
+            />
+          </label>
+
+          <label className="my-3 flex items-center gap-2 text-sm text-ink-2">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-line"
+              defaultChecked
+            />
+            Incluir na curadoria desta semana
+          </label>
+
+          <button type="button" className="btn btn-gold btn-block">
+            <ShieldCheck size={14} strokeWidth={1.7} />
+            Aprovar curadoria
+          </button>
+        </aside>
+      </div>
+    </AppAdminShell>
   );
 }

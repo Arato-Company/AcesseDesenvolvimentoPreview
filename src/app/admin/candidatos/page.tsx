@@ -1,166 +1,129 @@
-"use client";
-
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import { AppShell } from "@/components/AppShell";
+import { SlidersHorizontal, Sparkles, ExternalLink } from "lucide-react";
+import { AppAdminShell } from "@/components/AppAdminShell";
+import { Avatar } from "@/components/Avatar";
 import candidatos from "@/data/candidatos.json";
-import { allAreas, allCidades, areaNome, cidadeNome } from "@/data/lookups";
-import type { AreaSlug, Candidato, CidadeSlug, PlanoCandidato } from "@/types";
+import { cidadeNome } from "@/data/lookups";
+import type { Candidato, PlanoCandidato } from "@/types";
 
 const candidatosTyped = candidatos as Candidato[];
 
-const PLANOS: PlanoCandidato[] = ["start", "destaque", "premium"];
+const PLANO_BADGE: Record<PlanoCandidato, string> = {
+  premium: "bg-gold/20 text-gold-deep",
+  destaque: "bg-paper text-navy",
+  start: "bg-paper text-ink-2",
+};
+
+const PLANO_LABEL: Record<PlanoCandidato, string> = {
+  premium: "Premium",
+  destaque: "Destaque",
+  start: "Start",
+};
+
+const STATUS_BADGE: Record<string, string> = {
+  Ativo: "bg-success/10 text-success",
+  Curado: "bg-gold/20 text-gold-deep",
+  Inativo: "bg-paper text-ink-2",
+};
+
+function statusFor(c: Candidato): "Ativo" | "Curado" | "Inativo" {
+  if (c.curado) return "Curado";
+  if (c.matchScore >= 70) return "Ativo";
+  return "Inativo";
+}
+
+const DIAS_OFFSET = [3, 7, 12, 18, 22, 25, 28, 30, 4, 9];
 
 /**
- * /admin/candidatos — fonte: Web/11 - Admin Candidatos.html.
- * Tabela com filtros area/cidade/plano/curado.
+ * /admin/candidatos — W11. Tabela admin: candidato/plano/cidade/data/status/acoes.
  */
 export default function AdminCandidatosPage() {
-  const [area, setArea] = useState<AreaSlug | "">("");
-  const [cidade, setCidade] = useState<CidadeSlug | "">("");
-  const [plano, setPlano] = useState<PlanoCandidato | "">("");
-  const [apenasCurados, setApenasCurados] = useState(false);
-
-  const lista = useMemo(
-    () =>
-      candidatosTyped.filter((c) => {
-        if (area && c.area !== area) return false;
-        if (cidade && c.cidade !== cidade) return false;
-        if (plano && c.plano !== plano) return false;
-        if (apenasCurados && !c.curado) return false;
-        return true;
-      }),
-    [area, cidade, plano, apenasCurados],
-  );
+  const linhas = candidatosTyped;
 
   return (
-    <AppShell audience="admin" topbarTitle="Candidatos" topbarUserLabel="AD">
-      <header className="mb-8">
-        <p className="caps mb-2">Base ativa</p>
-        <h1 className="display-lg">
-          {lista.length} candidatos{" "}
-          <span className="text-ink-3">de {candidatosTyped.length}</span>
-        </h1>
+    <AppAdminShell topbarTitle="Candidatos">
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+            Base ativa
+          </p>
+          <h1 className="font-display text-3xl font-semibold text-navy">
+            Candidatos
+          </h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="rounded-full bg-success/10 px-3 py-1 font-mono text-2xs uppercase tracking-widest text-success">
+            432 ativos
+          </span>
+          <button className="btn btn-secondary btn-sm">
+            <SlidersHorizontal size={14} strokeWidth={1.7} />
+            Filtros
+          </button>
+        </div>
       </header>
 
-      <div className="mb-6 flex flex-wrap items-end gap-3 rounded-xl border border-line bg-offwhite p-4 shadow-1">
-        <label className="flex flex-col gap-1 text-xs uppercase tracking-widest text-ink-3">
-          Area
-          <select
-            className="field-select"
-            value={area}
-            onChange={(e) => setArea(e.target.value as AreaSlug | "")}
-          >
-            <option value="">Todas</option>
-            {allAreas.map((a) => (
-              <option key={a.slug} value={a.slug}>
-                {a.nome}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1 text-xs uppercase tracking-widest text-ink-3">
-          Cidade
-          <select
-            className="field-select"
-            value={cidade}
-            onChange={(e) => setCidade(e.target.value as CidadeSlug | "")}
-          >
-            <option value="">Todas</option>
-            {allCidades.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.nome}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1 text-xs uppercase tracking-widest text-ink-3">
-          Plano
-          <select
-            className="field-select"
-            value={plano}
-            onChange={(e) => setPlano(e.target.value as PlanoCandidato | "")}
-          >
-            <option value="">Todos</option>
-            {PLANOS.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-2 text-sm text-ink-2">
-          <input
-            type="checkbox"
-            className="h-4 w-4"
-            checked={apenasCurados}
-            onChange={(e) => setApenasCurados(e.target.checked)}
-          />
-          Apenas curados
-        </label>
-        <button
-          type="button"
-          className="ml-auto btn btn-ghost btn-sm"
-          onClick={() => {
-            setArea("");
-            setCidade("");
-            setPlano("");
-            setApenasCurados(false);
-          }}
-        >
-          Limpar filtros
-        </button>
-      </div>
-
-      <div className="overflow-x-auto rounded-xl border border-line bg-offwhite shadow-1">
+      <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-1">
         <table className="w-full text-left text-sm">
           <thead className="bg-paper">
-            <tr className="text-2xs uppercase tracking-widest text-ink-3">
-              <th className="px-5 py-3 font-mono">Nome</th>
-              <th className="px-5 py-3 font-mono">Cargo</th>
-              <th className="px-5 py-3 font-mono">Cidade</th>
-              <th className="px-5 py-3 font-mono">Area</th>
-              <th className="px-5 py-3 font-mono">Nivel</th>
-              <th className="px-5 py-3 font-mono">Plano</th>
-              <th className="px-5 py-3 font-mono">Status</th>
-              <th className="px-5 py-3 text-right font-mono">Match</th>
+            <tr className="font-mono text-2xs uppercase tracking-widest text-ink-3">
+              <th className="px-5 py-3">Candidato</th>
+              <th className="px-5 py-3">Plano</th>
+              <th className="px-5 py-3">Cidade</th>
+              <th className="px-5 py-3">Cadastro</th>
+              <th className="px-5 py-3">Status</th>
+              <th className="px-5 py-3 text-right">Acoes</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {lista.map((c) => (
-              <tr key={c.id} className="hover:bg-paper/60">
-                <td className="px-5 py-3 font-semibold text-navy">
-                  <Link
-                    href={`/empresa/candidato/${c.id}`}
-                    className="hover:text-gold-deep"
-                  >
-                    {c.nome}
-                  </Link>
-                </td>
-                <td className="px-5 py-3 text-ink-2">{c.cargo}</td>
-                <td className="px-5 py-3 text-ink-2">{cidadeNome(c.cidade)}</td>
-                <td className="px-5 py-3 text-ink-2">{areaNome(c.area)}</td>
-                <td className="px-5 py-3 text-ink-2">{c.nivel}</td>
-                <td className="px-5 py-3">
-                  <span className="rounded-full bg-paper px-2 py-0.5 font-mono text-2xs uppercase tracking-widest text-gold-deep">
-                    {c.plano}
-                  </span>
-                </td>
-                <td className="px-5 py-3">
-                  <span
-                    className={`font-mono text-2xs uppercase tracking-widest ${c.curado ? "text-gold-deep" : "text-ink-3"}`}
-                  >
-                    {c.curado ? "✦ Curado" : "Ativo"}
-                  </span>
-                </td>
-                <td className="px-5 py-3 text-right font-semibold text-navy">
-                  {c.matchScore}%
-                </td>
-              </tr>
-            ))}
+            {linhas.map((c, i) => {
+              const status = statusFor(c);
+              return (
+                <tr key={c.id} className="hover:bg-paper/40">
+                  <td className="px-5 py-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar name={c.nome} size="sm" />
+                      <div>
+                        <p className="font-semibold text-navy">{c.nome}</p>
+                        <p className="text-xs text-ink-2">{c.cargo}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-4">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-2xs uppercase tracking-widest ${PLANO_BADGE[c.plano]}`}
+                    >
+                      {c.plano === "premium" ? (
+                        <Sparkles size={11} strokeWidth={2} />
+                      ) : null}
+                      {PLANO_LABEL[c.plano]}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4 text-ink-2">
+                    {cidadeNome(c.cidade)}
+                  </td>
+                  <td className="px-5 py-4 font-mono text-2xs uppercase tracking-widest text-ink-3">
+                    Ha {DIAS_OFFSET[i % DIAS_OFFSET.length]}d
+                  </td>
+                  <td className="px-5 py-4">
+                    <span
+                      className={`rounded-full px-2 py-0.5 font-mono text-2xs uppercase tracking-widest ${STATUS_BADGE[status]}`}
+                    >
+                      {status}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4 text-right">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-widest text-navy transition hover:text-gold-deep"
+                    >
+                      Ver perfil <ExternalLink size={11} strokeWidth={1.7} />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
-    </AppShell>
+    </AppAdminShell>
   );
 }

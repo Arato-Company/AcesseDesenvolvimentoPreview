@@ -1,179 +1,197 @@
-import Link from "next/link";
-import { AppShell } from "@/components/AppShell";
-import candidatos from "@/data/candidatos.json";
-import empresas from "@/data/empresas.json";
-import vagas from "@/data/vagas.json";
-import posts from "@/data/posts.json";
-import type { Candidato, Empresa, Vaga, Post } from "@/types";
-import { cidadeNome, areaNome, empresaById } from "@/data/lookups";
+"use client";
 
-const candidatosTyped = candidatos as Candidato[];
-const empresasTyped = empresas as Empresa[];
-const vagasTyped = vagas as Vaga[];
-const postsTyped = posts as Post[];
+import { useState } from "react";
+import {
+  TrendingUp,
+  Users,
+  Building2,
+  UserPlus,
+  ShieldCheck,
+  Hourglass,
+  CreditCard,
+} from "lucide-react";
+import { AppAdminShell } from "@/components/AppAdminShell";
+import { StatCardKPI } from "@/components/StatCardKPI";
+import { RevenueBarChart } from "@/components/RevenueBarChart";
+import { PlanDistributionBars } from "@/components/PlanDistributionBars";
+import { AdminAlertItem } from "@/components/AdminAlertItem";
 
-type Atividade = {
-  tipo: "candidato" | "empresa" | "vaga" | "post";
-  titulo: string;
-  contexto: string;
-  data: string;
-};
+const PERIODOS = ["HOJE", "7D", "30D", "90D"] as const;
+type Periodo = (typeof PERIODOS)[number];
 
-function ultimasAtividades(): Atividade[] {
-  const acts: Atividade[] = [];
-  candidatosTyped.slice(0, 3).forEach((c) =>
-    acts.push({
-      tipo: "candidato",
-      titulo: c.nome,
-      contexto: `${c.cargo} · ${cidadeNome(c.cidade)}`,
-      data: "ha 2h",
-    }),
-  );
-  vagasTyped.slice(0, 3).forEach((v) =>
-    acts.push({
-      tipo: "vaga",
-      titulo: v.titulo,
-      contexto: `${cidadeNome(v.cidade)} · ${empresaById(v.empresaId)?.nome ?? "—"}`,
-      data: v.publicadaEm,
-    }),
-  );
-  empresasTyped.slice(0, 2).forEach((e) =>
-    acts.push({
-      tipo: "empresa",
-      titulo: e.nome,
-      contexto: `${areaNome(e.area)} · ${cidadeNome(e.cidade)}`,
-      data: "ha 1d",
-    }),
-  );
-  return acts.slice(0, 8);
-}
+const TRANSACOES = [
+  { data: "16/06", plano: "Premium · Candidato", valor: "R$ 39,90" },
+  { data: "16/06", plano: "Destaque · Empresa", valor: "R$ 99,90" },
+  { data: "15/06", plano: "Premium · Empresa", valor: "R$ 197,90" },
+  { data: "15/06", plano: "Destaque · Candidato", valor: "R$ 29,90" },
+  { data: "14/06", plano: "Premium · Candidato", valor: "R$ 39,90" },
+];
 
 /**
- * /admin — fonte: Web/10 - Admin Visao Geral.html.
- * KPIs + atividade recente. Demo navegavel.
+ * /admin — W10 Visao Geral.
+ * Reescrita fiel ao Stitch: KPIs + grafico Recharts + distribuicao planos
+ * + alertas operacionais + ultimas transacoes.
  */
-export default function AdminPage() {
-  const totalCurados = candidatosTyped.filter((c) => c.curado).length;
-  const vagasCuradas = vagasTyped.filter((v) => v.curada).length;
-  const totalAtivos = candidatosTyped.length + empresasTyped.length;
-
-  const kpis = [
-    {
-      label: "Candidatos ativos",
-      value: candidatosTyped.length,
-      hint: `${totalCurados} com selo ✦`,
-    },
-    {
-      label: "Empresas ativas",
-      value: empresasTyped.length,
-      hint: "5 regioes cobertas",
-    },
-    {
-      label: "Vagas publicadas",
-      value: vagasTyped.length,
-      hint: `${vagasCuradas} curadas`,
-    },
-    {
-      label: "Posts no feed",
-      value: postsTyped.length,
-      hint: "ultimos 30 dias",
-    },
-  ];
-
-  const atividades = ultimasAtividades();
+export default function AdminVisaoGeralPage() {
+  const [periodo, setPeriodo] = useState<Periodo>("30D");
 
   return (
-    <AppShell audience="admin" topbarTitle="Visao geral" topbarUserLabel="AD">
-      <header className="mb-10">
-        <p className="caps mb-2">Concierge</p>
-        <h1 className="display-lg">Visao geral da curadoria.</h1>
-        <p className="mt-2 text-sm text-ink-2">
-          {totalAtivos} contas ativas · {vagasTyped.length} vagas publicadas ·
-          atualizado agora.
-        </p>
-      </header>
-
-      <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((kpi) => (
-          <div
-            key={kpi.label}
-            className="rounded-xl border border-line bg-offwhite p-5 shadow-1"
-          >
-            <p className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-              {kpi.label}
-            </p>
-            <p className="mt-3 font-display text-3xl font-semibold text-navy">
-              {kpi.value}
-            </p>
-            <p className="mt-1 text-2xs uppercase tracking-widest text-gold-deep">
-              {kpi.hint}
-            </p>
+    <AppAdminShell
+      topbarTitle="Painel geral"
+      topbarLeft={
+        <div className="flex gap-1 rounded-lg border border-line bg-paper p-1">
+          {PERIODOS.map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => setPeriodo(p)}
+              className={`rounded-md px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition ${
+                periodo === p
+                  ? "bg-navy text-offwhite"
+                  : "text-ink-2 hover:text-navy"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      }
+    >
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Coluna esquerda */}
+        <section className="flex flex-col gap-6 lg:col-span-8">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            <StatCardKPI
+              label="MRR atual"
+              value="R$ 12.840"
+              delta="+12%"
+              icon={TrendingUp}
+            />
+            <StatCardKPI
+              label="Receita bruta"
+              value="R$ 18.290"
+              delta="+8,4%"
+              icon={TrendingUp}
+            />
+            <StatCardKPI
+              label="Candidatos"
+              value="432"
+              hint="Ativos na base"
+              icon={Users}
+            />
+            <StatCardKPI
+              label="Empresas"
+              value="67"
+              hint="Parceiras locais"
+              icon={Building2}
+            />
+            <StatCardKPI
+              label="Novos cadastros"
+              value="+38"
+              hint="Ultimos 7 dias"
+              icon={UserPlus}
+            />
           </div>
-        ))}
-      </div>
 
-      <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-        <section className="rounded-xl border border-line bg-offwhite p-6 shadow-1">
-          <header className="mb-5 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-navy">
-              Ultimas atividades
+          <div className="rounded-xl border border-line bg-offwhite p-8 shadow-1">
+            <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="font-mono text-2xs uppercase tracking-widest text-gold-deep">
+                  Receita 30 dias
+                </p>
+                <h2 className="font-display text-xl font-semibold text-navy">
+                  Direta vs. Recorrencia
+                </h2>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="inline-flex items-center gap-2 font-mono text-2xs uppercase tracking-widest text-ink-2">
+                  <span className="h-2 w-2 rounded-full bg-navy" /> Direta
+                </span>
+                <span className="inline-flex items-center gap-2 font-mono text-2xs uppercase tracking-widest text-ink-2">
+                  <span className="h-2 w-2 rounded-full bg-gold-deep" />{" "}
+                  Recorrencia
+                </span>
+              </div>
+            </header>
+            <RevenueBarChart periodo={periodo} />
+          </div>
+
+          <div className="rounded-xl border border-line bg-offwhite p-8 shadow-1">
+            <p className="mb-1 font-mono text-2xs uppercase tracking-widest text-gold-deep">
+              Distribuicao de planos
+            </p>
+            <h2 className="mb-6 font-display text-xl font-semibold text-navy">
+              Base ativa por tier
             </h2>
-            <Link
-              href="/admin/curadoria"
-              className="font-mono text-2xs uppercase tracking-widest text-gold-deep hover:text-navy"
-            >
-              Ver curadoria →
-            </Link>
-          </header>
-          <ul className="divide-y divide-line">
-            {atividades.map((a, i) => (
-              <li key={i} className="flex items-center justify-between py-3">
-                <div>
-                  <p className="text-sm font-semibold text-navy">{a.titulo}</p>
-                  <p className="text-xs text-ink-2">{a.contexto}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="rounded-full bg-paper px-3 py-1 font-mono text-2xs uppercase tracking-widest text-ink-3">
-                    {a.tipo}
-                  </span>
-                  <span className="font-mono text-2xs uppercase tracking-widest text-ink-3">
-                    {a.data}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
+            <PlanDistributionBars />
+          </div>
         </section>
 
-        <section className="rounded-xl border border-line bg-offwhite p-6 shadow-1">
-          <h2 className="mb-5 font-display text-lg font-semibold text-navy">
-            Atalhos
-          </h2>
-          <div className="flex flex-col gap-3">
-            <Link
-              href="/admin/curadoria"
-              className="btn btn-primary btn-block"
+        {/* Coluna direita */}
+        <aside className="flex flex-col gap-6 lg:col-span-4">
+          <div className="rounded-xl border border-line bg-offwhite p-6 shadow-1">
+            <h3 className="mb-4 font-display text-lg font-semibold text-navy">
+              Alertas operacionais
+            </h3>
+            <div className="flex flex-col gap-2">
+              <AdminAlertItem
+                icon={ShieldCheck}
+                titulo="14 perfis aguardando curadoria"
+                subtexto="SLA 48h · prioridade gold first"
+                tom="gold"
+                href="/admin/curadoria"
+              />
+              <AdminAlertItem
+                icon={Hourglass}
+                titulo="3 reembolsos pendentes"
+                subtexto="Aguardando revisao manual"
+                tom="ink"
+                href="/admin/reembolsos"
+              />
+              <AdminAlertItem
+                icon={CreditCard}
+                titulo="2 cobrancas com falha"
+                subtexto="Acao requerida — Stripe"
+                tom="danger"
+              />
+            </div>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm btn-block mt-6"
             >
-              Curadoria pendente
-            </Link>
-            <Link
-              href="/admin/posts"
-              className="btn btn-secondary btn-block"
-            >
-              Publicar post no feed
-            </Link>
-            <Link
-              href="/admin/comunicacao"
-              className="btn btn-ghost btn-block"
-            >
-              Disparo de comunicacao
-            </Link>
+              Ver todas pendencias
+            </button>
           </div>
-          <p className="mt-6 border-t border-line pt-4 font-mono text-2xs uppercase tracking-widest text-ink-3">
-            Concierge · Acesse Desenvolvimento
-          </p>
-        </section>
+
+          <div className="rounded-xl border border-line bg-offwhite p-6 shadow-1">
+            <h3 className="mb-4 font-display text-lg font-semibold text-navy">
+              Ultimas transacoes
+            </h3>
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="font-mono text-2xs uppercase tracking-widest text-ink-3">
+                  <th className="pb-2">Data</th>
+                  <th className="pb-2">Plano</th>
+                  <th className="pb-2 text-right">Valor</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {TRANSACOES.map((t, i) => (
+                  <tr key={i}>
+                    <td className="py-2 font-mono text-2xs uppercase tracking-widest text-ink-3">
+                      {t.data}
+                    </td>
+                    <td className="py-2 text-sm text-ink-2">{t.plano}</td>
+                    <td className="py-2 text-right text-sm font-semibold text-navy">
+                      {t.valor}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </aside>
       </div>
-    </AppShell>
+    </AppAdminShell>
   );
 }
