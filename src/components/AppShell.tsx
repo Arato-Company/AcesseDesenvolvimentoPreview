@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
-import { LogoArch } from "./LogoArch";
 import { Avatar } from "./Avatar";
+import { PaywallGate } from "./PaywallGate";
 import cidades from "@/data/cidades.json";
 
 type AppShellNavItem = {
@@ -166,12 +167,31 @@ export function AppShell({
         className="app-sidebar"
         aria-label="Navegacao do painel"
       >
-        <div className="app-sidebar-brand">
-          <LogoArch />
-          <span className="app-sidebar-brand-text">
-            Acesse<span className="dot">.</span>
+        <Link
+          href={audience === "empresa" ? "/empresa/dashboard" : "/admin"}
+          className="app-sidebar-brand"
+          aria-label="Acesse Desenvolvimento"
+        >
+          <span className="app-sidebar-logo-panel">
+            <Image
+              className="brand-full"
+              src="/logo-full.webp"
+              alt="Acesse Desenvolvimento"
+              width={200}
+              height={140}
+              priority
+            />
+            <Image
+              className="brand-mini"
+              src="/logo-mark.webp"
+              alt=""
+              width={68}
+              height={32}
+              priority
+            />
           </span>
-        </div>
+          <span className="app-sidebar-brand-cap">Circuito das Aguas</span>
+        </Link>
         <nav className="app-sidebar-nav">
           {nav.map((item) => (
             <Link
@@ -274,7 +294,13 @@ export function AppShell({
         </div>
       </header>
 
-      <main className="app-main">{children}</main>
+      <main className="app-main">
+        {audience === "empresa" ? (
+          <PaywallGate audience="empresa">{children}</PaywallGate>
+        ) : (
+          children
+        )}
+      </main>
     </div>
   );
 }

@@ -1,20 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
   Building2,
-  TrendingUp,
   ArrowLeftRight,
   Mail,
   ShieldCheck,
   FileText,
-  Settings,
   type LucideIcon,
 } from "lucide-react";
-import { LogoArch } from "./LogoArch";
 
 export type AdminNavItem = {
   href: string;
@@ -22,16 +20,16 @@ export type AdminNavItem = {
   icon: LucideIcon;
 };
 
+// Cada item aponta pra uma rota distinta — evita multiplos "active" simultaneos.
+// "Receita" foi removido: Visao geral ja mostra MRR/receita (era a mesma tela).
 const DEFAULT_NAV: AdminNavItem[] = [
   { href: "/admin", label: "Visao geral", icon: LayoutDashboard },
+  { href: "/admin/curadoria", label: "Curadoria", icon: ShieldCheck },
   { href: "/admin/candidatos", label: "Candidatos", icon: Users },
   { href: "/admin/empresas", label: "Empresas", icon: Building2 },
-  { href: "/admin", label: "Receita", icon: TrendingUp },
+  { href: "/admin/posts", label: "Posts", icon: FileText },
   { href: "/admin/reembolsos", label: "Reembolsos", icon: ArrowLeftRight },
   { href: "/admin/comunicacao", label: "Comunicacao", icon: Mail },
-  { href: "/admin/curadoria", label: "Curadoria", icon: ShieldCheck },
-  { href: "/admin/posts", label: "Posts", icon: FileText },
-  { href: "/admin", label: "Configuracoes", icon: Settings },
 ];
 
 type AppAdminSidebarProps = {
@@ -67,12 +65,27 @@ export function AppAdminSidebar({
       aria-label="Navegacao admin"
       style={{ position: "fixed" }}
     >
-      <div className="app-sidebar-brand">
-        <LogoArch />
-        <span className="app-sidebar-brand-text">
-          Acesse<span className="dot">.</span>
+      <Link href="/admin" className="app-sidebar-brand" aria-label="Acesse Desenvolvimento">
+        <span className="app-sidebar-logo-panel">
+          <Image
+            className="brand-full"
+            src="/logo-full.webp"
+            alt="Acesse Desenvolvimento"
+            width={200}
+            height={140}
+            priority
+          />
+          <Image
+            className="brand-mini"
+            src="/logo-mark.webp"
+            alt=""
+            width={68}
+            height={32}
+            priority
+          />
         </span>
-      </div>
+        <span className="app-sidebar-brand-cap">Circuito das Aguas</span>
+      </Link>
       <nav className="app-sidebar-nav">
         {nav.map((item, i) => {
           const Icon = item.icon;

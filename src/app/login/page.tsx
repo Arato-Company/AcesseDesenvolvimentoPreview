@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { Building2 } from "lucide-react";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { LoginEntryLink } from "@/components/LoginEntryLink";
 
 /**
  * /login — fonte ground truth: Stitch Web/01 (W01 desktop) + Mobile/01 (M01).
@@ -13,8 +12,8 @@ import { PlaceholderImage } from "@/components/PlaceholderImage";
 
 function LogoOverlay({ className }: { className?: string }) {
   return (
-    <div className={className}>
-      <div className="flex items-center gap-3">
+    <div className={`text-center ${className ?? ""}`}>
+      <div className="mb-2 flex justify-center">
         <svg
           width="60"
           height="30"
@@ -29,10 +28,10 @@ function LogoOverlay({ className }: { className?: string }) {
             strokeLinecap="round"
           />
         </svg>
-        <h1 className="font-display text-[36px] leading-none text-navy">
-          Acesse Desenvolvimento.
-        </h1>
       </div>
+      <h1 className="font-display text-[36px] leading-none tracking-tight text-navy">
+        Acesse Desenvolvimento.
+      </h1>
     </div>
   );
 }
@@ -66,14 +65,14 @@ export default function LoginPage() {
     <>
       {/* ===================== W01 — DESKTOP ===================== */}
       <main className="relative hidden h-screen overflow-hidden md:flex">
-        <LogoOverlay className="absolute left-1/2 top-8 z-50 -translate-x-1/2" />
+        <LogoOverlay className="absolute left-1/2 top-6 z-50 -translate-x-1/2 rounded-full border border-line bg-offwhite px-7 py-3 shadow-md" />
 
         {/* Left — Candidato */}
         <section className="flex flex-1 flex-col items-center justify-center border-r border-line/30 bg-offwhite px-8">
           <div className="max-w-md space-y-8 text-center">
             <div className="mx-auto w-72">
               <PlaceholderImage
-                src="/avatares/hero-login-candidato.webp"
+                src="/hero/login-desktop-candidato.webp"
                 alt="Profissional regional em ambiente de trabalho"
                 fallbackLabel="HERO CANDIDATO"
                 width={288}
@@ -89,49 +88,54 @@ export default function LoginPage() {
               Explore as melhores oportunidades da regiao em um ecossistema
               focado no seu crescimento profissional.
             </p>
-            <Link
-              href="/candidato/dashboard"
+            <LoginEntryLink
+              audience="candidato"
               className="btn btn-primary btn-lg inline-block rounded-lg px-12 py-4 transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
             >
               Acessar vagas
-            </Link>
+            </LoginEntryLink>
           </div>
         </section>
 
         {/* Right — Empresa */}
         <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-navy px-8">
-          <Building2
-            className="pointer-events-none absolute inset-0 m-auto h-64 w-64 text-gold-light opacity-30"
-            aria-hidden="true"
-            strokeWidth={1}
-          />
-          <div className="relative z-10 max-w-md space-y-8 text-center">
+          <div className="max-w-md space-y-8 text-center">
+            <div className="mx-auto h-64 w-64">
+              <PlaceholderImage
+                src="/hero/login-empresa-ilustracao.webp"
+                alt="Ilustracao ambiente corporativo — curadoria de talentos"
+                fallbackLabel="ILUSTRACAO EMPRESA"
+                width={256}
+                height={256}
+                className="h-64 w-64 object-contain opacity-80"
+              />
+            </div>
             <h2 className="font-display text-[48px] leading-tight text-gold-light">
               Sou empresa
             </h2>
-            <p className="mx-auto max-w-sm font-body text-base leading-relaxed text-offwhite/70">
+            <p className="mx-auto max-w-sm font-body text-base leading-relaxed text-offwhite opacity-80">
               Encontre talentos curados e acelere o desenvolvimento da sua
               equipe com as melhores mentes da regiao.
             </p>
-            <Link
-              href="/empresa/vitrine"
+            <LoginEntryLink
+              audience="empresa"
               className="btn btn-gold btn-lg inline-block rounded-lg px-12 py-4 transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
             >
               Buscar talentos
-            </Link>
+            </LoginEntryLink>
           </div>
         </section>
 
         {/* Tagline pill */}
-        <div className="fixed bottom-16 left-1/2 z-50 -translate-x-1/2 rounded-full border border-line/50 bg-offwhite/80 px-6 py-2 backdrop-blur-sm">
+        <div className="fixed bottom-16 left-1/2 z-50 -translate-x-1/2 rounded-full border border-line bg-offwhite px-6 py-2 shadow-sm">
           <span className="font-display italic text-gold-deep">
             Tem gente olhando.
           </span>
         </div>
 
         {/* Footer barra */}
-        <div className="fixed bottom-0 left-0 z-40 w-full border-t border-line/20 bg-navy/10 py-4 backdrop-blur-md">
-          <p className="flex flex-wrap justify-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-widest text-navy/60">
+        <div className="fixed bottom-0 left-0 z-40 w-full border-t border-navy-soft bg-navy-deep py-4">
+          <p className="flex flex-wrap justify-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-widest text-offwhite opacity-70">
             <span>ECOSSISTEMA REGIONAL</span>
             <span aria-hidden="true">•</span>
             <span>VITRINE</span>
@@ -143,21 +147,27 @@ export default function LoginPage() {
         </div>
 
         {/* Location decorators — desktop wide */}
-        <div
-          className="fixed bottom-24 left-10 z-40 hidden lg:block"
-          style={{ writingMode: "vertical-lr", transform: "rotate(180deg)" }}
-        >
-          <p className="font-mono text-[10px] uppercase tracking-widest text-navy/30">
-            Jaguariuna · Amparo
-          </p>
+        <div className="fixed bottom-24 left-10 z-40 hidden flex-col gap-2 lg:flex">
+          {["Jaguariuna", "Amparo"].map((c) => (
+            <span
+              key={c}
+              className="font-mono text-[10px] uppercase tracking-[0.3em] text-navy/30"
+              style={{ writingMode: "vertical-lr", transform: "rotate(180deg)" }}
+            >
+              {c}
+            </span>
+          ))}
         </div>
-        <div
-          className="fixed bottom-24 right-10 z-40 hidden lg:block"
-          style={{ writingMode: "vertical-lr" }}
-        >
-          <p className="font-mono text-[10px] uppercase tracking-widest text-gold-light/30">
-            Socorro · Serra Negra
-          </p>
+        <div className="fixed bottom-24 right-10 z-40 hidden flex-col gap-2 lg:flex">
+          {["Socorro", "Serra Negra"].map((c) => (
+            <span
+              key={c}
+              className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold-light/30"
+              style={{ writingMode: "vertical-lr" }}
+            >
+              {c}
+            </span>
+          ))}
         </div>
       </main>
 
@@ -174,23 +184,23 @@ export default function LoginPage() {
           style={{ height: "60vh", minHeight: "60vh" }}
         >
           <PlaceholderImage
-            src="/avatares/hero-login-candidato-mobile.webp"
+            src="/hero/login-mobile-candidato.webp"
             alt="Profissional regional"
             fallbackLabel="HERO MOBILE"
             width={192}
             height={192}
-            className="mb-6 h-48 w-48 rounded-xl object-contain opacity-80 mix-blend-multiply grayscale"
+            className="mb-6 h-48 w-48 rounded-xl object-cover"
             priority
           />
           <h2 className="mb-4 font-display text-2xl text-navy">
             Sou candidato
           </h2>
-          <Link
-            href="/candidato/dashboard"
+          <LoginEntryLink
+            audience="candidato"
             className="btn btn-primary rounded-lg px-8 py-3 font-bold uppercase tracking-wider transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
           >
             Acessar vagas
-          </Link>
+          </LoginEntryLink>
         </section>
 
         {/* Split badge */}
@@ -208,21 +218,15 @@ export default function LoginPage() {
           className="relative flex flex-col items-center justify-center overflow-hidden bg-navy px-4 text-center"
           style={{ height: "40vh", minHeight: "40vh" }}
         >
-          <Building2
-            className="pointer-events-none absolute inset-0 m-auto text-gold-light opacity-10"
-            style={{ width: "300px", height: "300px" }}
-            aria-hidden="true"
-            strokeWidth={1}
-          />
           <h2 className="relative z-10 mb-4 font-display text-lg text-offwhite">
             Sou empresa
           </h2>
-          <Link
-            href="/empresa/vitrine"
+          <LoginEntryLink
+            audience="empresa"
             className="btn btn-gold relative z-10 rounded-lg px-8 py-3 font-bold uppercase tracking-wider transition-all hover:-translate-y-px hover:shadow-md active:scale-95"
           >
             Buscar talentos
-          </Link>
+          </LoginEntryLink>
         </section>
 
         {/* Footer discreto */}

@@ -1,5 +1,9 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { UploadCloud } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { setStage } from "@/lib/onboarding";
 import cidades from "@/data/cidades.json";
 import areas from "@/data/areas.json";
 import type { Area, Cidade } from "@/types";
@@ -12,6 +16,15 @@ const areasTyped = areas as Area[];
  * Inputs underline (border-b only), 3 secoes numeradas, CTA "CONCLUIR CADASTRO".
  */
 export default function EmpresaCadastroPage() {
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Cadastrou -> onboarded. Entra no sistema em modo preview (opaco) ate pagar.
+    setStage("empresa", "onboarded");
+    router.push("/empresa/vitrine");
+  };
+
   return (
     <AppShell
       audience="empresa"
@@ -32,7 +45,7 @@ export default function EmpresaCadastroPage() {
           </p>
         </header>
 
-        <form className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
           {/* Secao 1 */}
           <section className="rounded-lg border border-line bg-offwhite p-8">
             <div className="mb-6 flex items-center gap-3">

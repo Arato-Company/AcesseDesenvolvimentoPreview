@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MessageCircle, Star, Trash2 } from "lucide-react";
-import { Avatar } from "./Avatar";
+import { BadgeCheck, MessageCircle, Star, Trash2 } from "lucide-react";
+import { PlaceholderImage } from "./PlaceholderImage";
 import type { Candidato } from "@/types";
 import { cidadeNome, areaNome } from "@/data/lookups";
 
@@ -84,7 +84,25 @@ export function FavoriteProfileCard({
       />
 
       <div className="flex items-start gap-4 pr-8">
-        <Avatar name={candidato.nome} size="lg" />
+        <div className="relative flex-shrink-0">
+          <PlaceholderImage
+            src={`/avatares/${candidato.id}.webp`}
+            alt={candidato.nome}
+            fallbackLabel={candidato.nome}
+            width={64}
+            height={64}
+            className={`h-16 w-16 rounded-full object-cover ${
+              candidato.curado
+                ? "border-2 border-gold-light"
+                : "border-2 border-offwhite"
+            }`}
+          />
+          {candidato.curado ? (
+            <span className="absolute -bottom-1 -right-1 rounded-full border-2 border-offwhite bg-gold-light p-0.5 text-navy">
+              <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
+            </span>
+          ) : null}
+        </div>
         <div className="min-w-0 flex-1">
           <p className="font-display text-lg font-semibold text-navy">
             {candidato.nome}
@@ -92,6 +110,9 @@ export function FavoriteProfileCard({
           <p className="text-sm text-ink-2">{candidato.cargo}</p>
           <p className="mt-1 font-mono text-2xs uppercase tracking-widest text-ink-3">
             {cidade} · SP
+          </p>
+          <p className="mt-2 font-display text-base font-bold text-gold-deep">
+            {candidato.matchScore}% <span className="font-mono text-2xs uppercase tracking-widest text-ink-3">match</span>
           </p>
         </div>
       </div>

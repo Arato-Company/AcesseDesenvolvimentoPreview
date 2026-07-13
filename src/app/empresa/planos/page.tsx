@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { CreditPackCard } from "@/components/CreditPackCard";
-import { PaymentForm } from "@/components/PaymentForm";
+import { setStage } from "@/lib/onboarding";
 
 type Pack = {
   id: "inicial" | "crescimento" | "volume";
@@ -67,6 +68,14 @@ const PACKS: Pack[] = [
  */
 export default function PlanosEmpresaPage() {
   const [selected, setSelected] = useState<Pack>(PACKS[1]);
+  const router = useRouter();
+
+  // Mock v0: escolher um pacote = pagar -> ativo. Libera o sistema completo.
+  const ativar = (p: Pack) => {
+    setSelected(p);
+    setStage("empresa", "ativo");
+    router.push("/empresa/vitrine");
+  };
 
   return (
     <AppShell
@@ -86,7 +95,7 @@ export default function PlanosEmpresaPage() {
           assinatura, sem renovacao automatica.
         </p>
 
-        <div className="mb-20 mt-10 grid grid-cols-1 items-stretch gap-8 md:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 items-stretch gap-8 pb-8 md:grid-cols-3">
           {PACKS.map((p) => (
             <CreditPackCard
               key={p.id}
@@ -97,18 +106,9 @@ export default function PlanosEmpresaPage() {
               ctaLabel={p.ctaLabel}
               featured={p.featured}
               selected={selected.id === p.id}
-              onSelect={() => setSelected(p)}
+              onSelect={() => ativar(p)}
             />
           ))}
-        </div>
-
-        <div className="mx-auto max-w-2xl rounded-2xl border border-line bg-offwhite p-8 shadow-1">
-          <PaymentForm
-            mode="credito"
-            resumoLabel={`${PACKS.find((p) => p.id === selected.id)?.eyebrow} · ${selected.precoLabel}`}
-            resumoValor={selected.preco}
-            ctaLabel="Comprar creditos"
-          />
         </div>
       </div>
     </AppShell>

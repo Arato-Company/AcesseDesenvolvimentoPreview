@@ -138,5 +138,47 @@
     "plano": "start",
     "curado": false,
     "foto": null
+  },
+  {
+    "id": "cand-011",
+    "nome": "Marcos Antunes",
+    "cargo": "Auxiliar de Producao Floricola",
+    "cidade": "holambra",
+    "area": "agro",
+    "nivel": "Junior",
+    "resumo": "1 ano em estufa de plantas ornamentais. Plantio e manejo diario.",
+    "tags": ["PLANTIO", "ESTUFA", "CNH B"],
+    "matchScore": 73,
+    "plano": "start",
+    "curado": false,
+    "foto": null
+  },
+  {
+    "id": "cand-012",
+    "nome": "Juliana Prado",
+    "cargo": "Tecnica em Floricultura",
+    "cidade": "holambra",
+    "area": "agro",
+    "nivel": "Pleno",
+    "resumo": "4 anos em manejo e colheita de flores de corte. Controle de irrigacao.",
+    "tags": ["MANEJO", "COLHEITA", "IRRIGACAO"],
+    "matchScore": 88,
+    "plano": "destaque",
+    "curado": true,
+    "foto": null
+  },
+  {
+    "id": "cand-013",
+    "nome": "Tiago Ramos",
+    "cargo": "Operador Agricola",
+    "cidade": "pedreira",
+    "area": "agro",
+    "nivel": "Pleno",
+    "resumo": "6 anos em lavoura e viveiro. Plantio mecanizado e manejo de solo.",
+    "tags": ["MANEJO", "PLANTIO", "TRATOR"],
+    "matchScore": 63,
+    "plano": "start",
+    "curado": false,
+    "foto": null
   }
 ]

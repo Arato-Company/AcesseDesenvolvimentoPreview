@@ -36,6 +36,16 @@ export type Area = {
 
 export type RegimeContratacao = "CLT" | "PJ" | "Temporario" | "Estagio" | "Freelancer";
 
+export type NivelExperiencia = "Junior" | "Pleno" | "Senior" | "Especialista";
+
+export type ModalidadeTrabalho = "presencial" | "hibrido" | "remoto";
+
+/**
+ * Estado da busca (pivô matching): `processando` enquanto a curadoria/IA
+ * cruza critérios; `resultado` quando há candidatos aderentes prontos.
+ */
+export type StatusBusca = "processando" | "resultado";
+
 export type Vaga = {
   id: string;
   titulo: string;
@@ -49,9 +59,28 @@ export type Vaga = {
   tags: string[];
   publicadaEm: string;
   curada: boolean;
+  /** Pivô busca inteligente — critérios de matching + estado. */
+  senioridade: NivelExperiencia;
+  skills: string[];
+  modalidade: ModalidadeTrabalho;
+  tipo: RegimeContratacao;
+  status: StatusBusca;
+  /** Data ISO `YYYY-MM-DD` de criação da busca. */
+  createdAt: string;
 };
 
-export type NivelExperiencia = "Junior" | "Pleno" | "Senior" | "Especialista";
+/** Motivo pelo qual um candidato casou com a busca (chip no card de match). */
+export type MatchReason = {
+  label: string;
+  strength: "high" | "base";
+};
+
+/** Resultado do cruzamento determinístico vaga × candidato. */
+export type CandidatoMatch = {
+  candidato: Candidato;
+  score: number;
+  reasons: MatchReason[];
+};
 
 export type PlanoCandidato = "start" | "destaque" | "premium";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   BadgeCheck,
   ChevronLeft,
@@ -13,6 +14,7 @@ import candidatos from "@/data/candidatos.json";
 import cidades from "@/data/cidades.json";
 import areas from "@/data/areas.json";
 import { cidadeNome } from "@/data/lookups";
+import { scoreColor } from "@/lib/scoreColor";
 import type {
   AreaSlug,
   Candidato,
@@ -32,12 +34,6 @@ const CONTRATOS: Array<RegimeContratacao | "todos"> = [
   "PJ",
   "Temporario",
 ];
-
-function scoreColor(score: number): string {
-  if (score >= 90) return "text-gold-deep";
-  if (score >= 75) return "text-gold";
-  return "text-ink-2";
-}
 
 function avatarPath(id: string): string {
   // cand-001..010 — Batch 4 entrega webp; PlaceholderImage cuida do fallback.
@@ -317,12 +313,12 @@ export default function EmpresaVitrinePage() {
                           {c.matchScore}%
                         </p>
                       </div>
-                      <button
-                        type="button"
+                      <Link
+                        href={`/empresa/candidato/${c.id}`}
                         className="btn btn-primary btn-sm uppercase"
                       >
                         Ver perfil
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </article>

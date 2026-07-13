@@ -19,7 +19,7 @@ export function LogoArch({ className, width = 40, height = 40 }: LogoArchProps) 
       aria-hidden="true"
     >
       <Image
-        src="/logo.webp"
+        src="/logo-mark.webp"
         alt=""
         width={width}
         height={height}

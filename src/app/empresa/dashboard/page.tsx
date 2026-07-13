@@ -9,9 +9,24 @@ import {
 import { AppShell } from "@/components/AppShell";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import cidades from "@/data/cidades.json";
-import type { Cidade } from "@/types";
+import vagas from "@/data/vagas.json";
+import candidatos from "@/data/candidatos.json";
+import { areaNome } from "@/data/lookups";
+import { matchCandidatos } from "@/lib/matching";
+import type { Candidato, Cidade, Vaga } from "@/types";
 
 const cidadesTyped = cidades as Cidade[];
+const vagasTyped = vagas as Vaga[];
+const candidatosTyped = candidatos as Candidato[];
+
+/** Buscas em destaque no painel (ids de `vagas.json`). */
+const BUSCAS_DESTAQUE = ["vaga-004", "vaga-003", "vaga-001"];
+
+function diasDesde(iso: string): number {
+  const inicio = new Date(iso).getTime();
+  const agora = Date.now();
+  return Math.max(0, Math.round((agora - inicio) / 86_400_000));
+}
 
 type FavoritoLinha = {
   id: string;
@@ -51,6 +66,8 @@ const FAVORITOS: FavoritoLinha[] = [
 
 type CuradoCard = {
   id: string;
+  /** Id do candidato real (candidatos.json) — destino do "Visualizar perfil". */
+  candidatoId: string;
   nome: string;
   cargo: string;
   cidade: string;
@@ -60,6 +77,7 @@ type CuradoCard = {
 const CURADOS: CuradoCard[] = [
   {
     id: "cur-1",
+    candidatoId: "cand-007",
     nome: "Ricardo Mendes",
     cargo: "Gerente de Operacoes",
     cidade: "Jaguariuna",
@@ -67,6 +85,7 @@ const CURADOS: CuradoCard[] = [
   },
   {
     id: "cur-2",
+    candidatoId: "cand-008",
     nome: "Beatriz Soares",
     cargo: "Analista de Marketing",
     cidade: "Amparo",
@@ -74,6 +93,7 @@ const CURADOS: CuradoCard[] = [
   },
   {
     id: "cur-3",
+    candidatoId: "cand-009",
     nome: "Lucas Oliveira",
     cargo: "Tecnico em Logistica",
     cidade: "Pedreira",
@@ -95,6 +115,14 @@ const CURADOS: CuradoCard[] = [
 export default function EmpresaDashboardPage() {
   const vagasAtivas = "08";
 
+  const buscas = BUSCAS_DESTAQUE.map((id) => {
+    const vaga = vagasTyped.find((v) => v.id === id)!;
+    return {
+      vaga,
+      total: matchCandidatos(vaga, candidatosTyped).length,
+    };
+  });
+
   return (
     <AppShell
       audience="empresa"
@@ -110,7 +138,7 @@ export default function EmpresaDashboardPage() {
         <p className="mt-2 font-body text-base text-ink-2">
           12 candidatos novos ·{" "}
           <span className="font-semibold text-navy">
-            3 vagas com candidaturas esta semana
+            3 buscas ativas esta semana
           </span>
         </p>
       </section>
@@ -120,6 +148,60 @@ export default function EmpresaDashboardPage() {
         <div className="stat-card max-w-sm">
           <p className="eyebrow mb-2">Vagas ativas</p>
           <p className="stat-card-num">{vagasAtivas}</p>
+        </div>
+      </section>
+
+      {/* Buscas ativas */}
+      <section className="mb-16">
+        <header className="mb-8 flex items-end justify-between gap-4">
+          <div>
+            <h3 className="font-display text-[28px] font-semibold text-navy">
+              Buscas ativas
+            </h3>
+            <p className="mt-2 font-body text-sm text-ink-2">
+              Acompanhe quem a gente ja encontrou pra cada busca.
+            </p>
+          </div>
+          <Link
+            href="/empresa/vaga/nova"
+            className="eyebrow border-b border-navy pb-1 text-navy"
+          >
+            VER TODAS
+          </Link>
+        </header>
+
+        <div className="flex flex-col gap-3">
+          {buscas.map(({ vaga, total }) => (
+            <div
+              key={vaga.id}
+              className="flex items-center gap-4 rounded-xl border border-line bg-offwhite p-4 transition-colors hover:bg-paper"
+            >
+              <span className="tag flex-shrink-0">{areaNome(vaga.area)}</span>
+              <p className="min-w-0 flex-1 truncate font-body text-sm font-semibold text-navy">
+                {vaga.titulo}
+              </p>
+              {vaga.status === "processando" ? (
+                <span className="eyebrow inline-flex flex-shrink-0 items-center gap-2 text-gold-deep">
+                  <span
+                    className="h-2 w-2 animate-pulse rounded-full bg-gold"
+                    aria-hidden="true"
+                  />
+                  Buscando
+                </span>
+              ) : (
+                <span className="eyebrow flex-shrink-0 text-ink-3">
+                  {total} candidatos · ha {diasDesde(vaga.createdAt)} dias
+                </span>
+              )}
+              <Link
+                href={`/empresa/vaga/${vaga.id}`}
+                className="btn btn-ghost btn-sm flex-shrink-0"
+              >
+                Ver resultados
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -165,7 +247,7 @@ export default function EmpresaDashboardPage() {
                   {c.cidade}, SP
                 </p>
                 <Link
-                  href="/empresa/vitrine?filter=curado"
+                  href={`/empresa/candidato/${c.candidatoId}`}
                   className="btn btn-primary mt-4 w-full text-xs uppercase tracking-widest"
                 >
                   Visualizar perfil
@@ -214,14 +296,15 @@ export default function EmpresaDashboardPage() {
               aria-hidden="true"
             />
             <h3 className="font-display text-[28px] font-semibold text-navy">
-              Receber candidaturas
+              Encontrar candidatos
             </h3>
             <p className="mt-4 max-w-md font-body text-ink-2">
-              Publique sua vaga e os candidatos certos chegam ate voce.
+              Crie sua busca com os criterios que voce quer. A gente encontra os
+              candidatos que batem.
             </p>
           </div>
           <span className="eyebrow mt-8 inline-flex items-center gap-2 text-navy transition-transform group-hover:translate-x-2">
-            Publicar nova vaga
+            Comecar nova busca
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </span>
         </Link>

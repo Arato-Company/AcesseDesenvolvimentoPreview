@@ -10,6 +10,8 @@ type PaymentFormProps = {
   resumoLabel: string;
   resumoValor: string;
   ctaLabel: string;
+  /** Acao ao confirmar pagamento (mock v0: libera acesso). */
+  onConfirm?: () => void;
 };
 
 function maskCPF(value: string) {
@@ -29,6 +31,7 @@ export function PaymentForm({
   resumoLabel,
   resumoValor,
   ctaLabel,
+  onConfirm,
 }: PaymentFormProps) {
   const [metodo, setMetodo] = useState<"cartao" | "pix">(
     mode === "assinatura" ? "pix" : "cartao",
@@ -157,7 +160,11 @@ export function PaymentForm({
         </span>
       </div>
 
-      <button type="button" className="btn btn-primary btn-block btn-lg">
+      <button
+        type="button"
+        onClick={onConfirm}
+        className="btn btn-primary btn-block btn-lg"
+      >
         {ctaLabel}
       </button>
 

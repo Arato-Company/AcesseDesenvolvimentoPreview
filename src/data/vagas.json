@@ -11,13 +11,19 @@
     "resumo": "Atendimento de hospedes nacionais e estrangeiros, check-in/out, suporte ao spa.",
     "tags": ["INGLES", "ESCALA 6X1", "VALE-REFEICAO"],
     "publicadaEm": "2026-06-02",
-    "curada": true
+    "curada": true,
+    "senioridade": "Pleno",
+    "skills": ["INGLES", "ESPANHOL", "HOTELARIA", "CHECK-IN"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-07-01"
   },
   {
     "id": "vaga-002",
-    "titulo": "Camareira (a)",
+    "titulo": "Camareira (a) — Hotel Termas",
     "empresaId": "emp-001",
-    "cidade": "serra-negra",
+    "cidade": "lindoia",
     "area": "turismo",
     "regime": "CLT",
     "salarioMin": 1800,
@@ -25,7 +31,13 @@
     "resumo": "Limpeza e organizacao de apartamentos, padrao internacional, escala 6x1.",
     "tags": ["SEM EXPERIENCIA", "TRANSPORTE", "REFEICAO NO LOCAL"],
     "publicadaEm": "2026-06-04",
-    "curada": false
+    "curada": false,
+    "senioridade": "Junior",
+    "skills": ["ARRUMACAO", "ROUPARIA", "PADRAO INTERNACIONAL"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-07-03"
   },
   {
     "id": "vaga-003",
@@ -39,7 +51,13 @@
     "resumo": "Plantio, manejo e colheita de plantas ornamentais. Trabalho em estufa.",
     "tags": ["CLT", "TRANSPORTE", "12 VAGAS"],
     "publicadaEm": "2026-06-05",
-    "curada": false
+    "curada": false,
+    "senioridade": "Pleno",
+    "skills": ["PLANTIO", "MANEJO", "COLHEITA", "ESTUFA"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-07-02"
   },
   {
     "id": "vaga-004",
@@ -53,7 +71,13 @@
     "resumo": "Roteirizacao de entregas, controle de carga e expedicao para todo Sudeste.",
     "tags": ["EXCEL", "EXPERIENCIA 1+ ANO", "CNH B"],
     "publicadaEm": "2026-06-06",
-    "curada": true
+    "curada": true,
+    "senioridade": "Pleno",
+    "skills": ["EXCEL", "LOGISTICA", "CNH B", "ROTEIRIZACAO"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "processando",
+    "createdAt": "2026-07-05"
   },
   {
     "id": "vaga-005",
@@ -67,7 +91,13 @@
     "resumo": "Operacao de forno tunel em ceramica decorativa. Turnos rotativos.",
     "tags": ["TURNO NOTURNO", "INSALUBRIDADE", "EXPERIENCIA"],
     "publicadaEm": "2026-06-01",
-    "curada": false
+    "curada": false,
+    "senioridade": "Junior",
+    "skills": ["FORNO TUNEL", "CERAMICA", "TURNO"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-06-28"
   },
   {
     "id": "vaga-006",
@@ -81,7 +111,13 @@
     "resumo": "Atuacao em pronto-socorro adulto, escala 12x36. COREN ativo obrigatorio.",
     "tags": ["COREN", "PLANTAO 12X36", "INSALUBRIDADE"],
     "publicadaEm": "2026-06-07",
-    "curada": true
+    "curada": true,
+    "senioridade": "Pleno",
+    "skills": ["COREN", "UTI", "EMERGENCIA"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-06-30"
   },
   {
     "id": "vaga-007",
@@ -95,7 +131,13 @@
     "resumo": "Atendimento ao paciente, agendamento e gestao de filas no PS.",
     "tags": ["ATENDIMENTO", "ESCALA 6X1", "MEDICINA DE GRUPO"],
     "publicadaEm": "2026-06-08",
-    "curada": false
+    "curada": false,
+    "senioridade": "Junior",
+    "skills": ["ATENDIMENTO", "AGENDAMENTO"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-06-29"
   },
   {
     "id": "vaga-008",
@@ -109,7 +151,13 @@
     "resumo": "Reposicao de gondolas, conferencia de validade e organizacao de estoque.",
     "tags": ["SEM EXPERIENCIA", "REFEICAO", "VALE-TRANSPORTE"],
     "publicadaEm": "2026-06-03",
-    "curada": false
+    "curada": false,
+    "senioridade": "Junior",
+    "skills": ["REPOSICAO", "ESTOQUE"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-06-27"
   },
   {
     "id": "vaga-009",
@@ -123,7 +171,13 @@
     "resumo": "Atendimento no caixa, fechamento de turno e suporte ao cliente.",
     "tags": ["ATENDIMENTO", "ESCALA 6X1", "EXPERIENCIA"],
     "publicadaEm": "2026-06-05",
-    "curada": false
+    "curada": false,
+    "senioridade": "Pleno",
+    "skills": ["ATENDIMENTO", "CAIXA", "FECHAMENTO"],
+    "modalidade": "presencial",
+    "tipo": "CLT",
+    "status": "resultado",
+    "createdAt": "2026-07-01"
   },
   {
     "id": "vaga-010",
@@ -137,6 +191,12 @@
     "resumo": "Atendimento em alta temporada (julho/dezembro). Pico de feriados.",
     "tags": ["TEMPORARIO", "ALTA TEMPORADA", "GORJETAS"],
     "publicadaEm": "2026-06-06",
-    "curada": true
+    "curada": true,
+    "senioridade": "Pleno",
+    "skills": ["ATENDIMENTO", "ALTA TEMPORADA", "GORJETAS"],
+    "modalidade": "presencial",
+    "tipo": "Temporario",
+    "status": "resultado",
+    "createdAt": "2026-07-04"
   }
 ]

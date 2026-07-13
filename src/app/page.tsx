@@ -2,11 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { PricingCard } from "@/components/PricingCard";
-import planos from "@/data/planos.json";
-import type { Planos } from "@/types";
-
-const planosTyped = planos as Planos;
 
 /**
  * Landing page principal — porte fiel do `Marketing/LP/index.html`.
@@ -44,10 +39,7 @@ export default function HomePage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link href="/login" className="btn btn-primary btn-lg">
-                  Sou candidato
-                </Link>
-                <Link href="#planos" className="btn btn-secondary btn-lg">
-                  Sou empresa
+                  Iniciar
                 </Link>
               </div>
               <p className="mt-10 flex flex-wrap items-center gap-4 text-sm text-ink-2">
@@ -404,71 +396,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* PRICING EMPRESA */}
-        <section
-          id="planos"
-          className="border-t border-line bg-paper"
-          style={{ padding: "var(--s-24) 0" }}
-          aria-labelledby="pricing-title"
-        >
-          <div className="container-ds">
-            <header className="mx-auto mb-16 max-w-3xl text-center">
-              <p className="caps mb-3">Planos para empresas</p>
-              <h2 id="pricing-title" className="display-xl mb-4">
-                Mensal recorrente. Sem letra miuda.
-              </h2>
-              <p className="lead mx-auto">
-                Cancele quando quiser. As parceiras institucionais ganham 2
-                meses gratis.
-              </p>
-            </header>
-            <div className="grid items-stretch gap-6 lg:grid-cols-3">
-              {planosTyped.empresa.map((p) => {
-                const isPremium = p.id === "premium";
-                const isDestaque = p.id === "destaque";
-                return (
-                  <PricingCard
-                    key={p.id}
-                    nome={p.nome}
-                    preco={p.preco}
-                    periodo="/mes"
-                    destaques={p.destaques}
-                    variant={
-                      isPremium ? "premium" : isDestaque ? "featured" : "default"
-                    }
-                    badge={
-                      isPremium
-                        ? "✦ Concierge"
-                        : isDestaque
-                          ? "Mais escolhido"
-                          : undefined
-                    }
-                    badgeVariant={isPremium ? "gold" : "default"}
-                    cta={
-                      <Link
-                        href="/empresa/planos"
-                        className={`btn ${isPremium ? "btn-premium" : isDestaque ? "btn-primary" : "btn-secondary"} btn-block`}
-                      >
-                        {isPremium ? "Falar com a equipe" : "Comecar agora"}
-                      </Link>
-                    }
-                  />
-                );
-              })}
-            </div>
-            <p className="mt-12 text-center text-sm text-ink-2">
-              Para profissionais, planos em pacote unico de 5 meses (R$ 19,90 /
-              29,90 / 39,90).{" "}
-              <Link
-                href="/candidato/planos"
-                className="border-b border-gold font-medium text-navy"
-              >
-                Ver planos do candidato →
-              </Link>
-            </p>
-          </div>
-        </section>
-
         {/* CTA FINAL */}
         <section
           aria-labelledby="cta-title"
@@ -494,11 +421,8 @@ export default function HomePage() {
               Manda seu curriculo. A gente olha.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/candidato/cadastro" className="btn btn-gold btn-lg">
-                Sou candidato
-              </Link>
-              <Link href="#planos" className="btn btn-outline-light btn-lg">
-                Sou empresa
+              <Link href="/login" className="btn btn-gold btn-lg">
+                Iniciar
               </Link>
             </div>
           </div>

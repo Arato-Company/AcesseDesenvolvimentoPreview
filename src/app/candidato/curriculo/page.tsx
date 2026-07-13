@@ -139,8 +139,8 @@ export default function CandidatoCurriculoPage() {
 
   return (
     <CandidatoLayout userName={c.nome} noFrame hideHeader>
-      {/* Topbar custom */}
-      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-line/20 bg-offwhite px-4">
+      {/* Topbar custom — mobile only (desktop usa navbar do layout) */}
+      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-line/20 bg-offwhite px-4 md:hidden">
         <div className="flex items-center gap-3">
           <Avatar name={c.nome} size="sm" />
           <span className="font-display text-2xl tracking-tighter text-navy">
@@ -156,48 +156,79 @@ export default function CandidatoCurriculoPage() {
         </button>
       </header>
 
-      <main className="px-4 pb-32 pt-6">
-        {/* Galeria modelos */}
-        <section className="mb-8">
-          <div className="mb-3 flex items-end justify-between">
-            <p className="font-mono text-xs uppercase tracking-widest text-ink-2">
-              Escolha um modelo
-            </p>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3">
-              {MODELOS.length} modelos
-            </span>
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {MODELOS.map((m) => (
-              <ModeloThumb
-                key={m.id}
-                modelo={m}
-                ativo={modeloAtivo === m.id}
-                onSelect={() => setModeloAtivo(m.id)}
+      {/* Titulo desktop */}
+      <div className="hidden px-8 pt-8 md:block">
+        <p className="eyebrow text-gold-deep">Meu curriculo</p>
+        <h1 className="mt-2 font-display text-[40px] leading-tight text-navy">
+          Gere e baixe seu curriculo curado
+        </h1>
+      </div>
+
+      <main className="px-4 pb-32 pt-6 md:px-8 md:pb-16">
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-10">
+          {/* ============ CONTROLES (esquerda no desktop) ============ */}
+          <div className="w-full space-y-8 md:sticky md:top-24 md:w-[360px] md:flex-shrink-0">
+            {/* Galeria modelos */}
+            <section>
+              <div className="mb-3 flex items-end justify-between">
+                <p className="font-mono text-xs uppercase tracking-widest text-ink-2">
+                  Escolha um modelo
+                </p>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3">
+                  {MODELOS.length} modelos
+                </span>
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible">
+                {MODELOS.map((m) => (
+                  <ModeloThumb
+                    key={m.id}
+                    modelo={m}
+                    ativo={modeloAtivo === m.id}
+                    onSelect={() => setModeloAtivo(m.id)}
+                  />
+                ))}
+              </div>
+            </section>
+
+            {/* Insight regional */}
+            <aside className="flex gap-3 rounded-r-lg border-l-4 border-gold-deep bg-gold/10 p-4">
+              <Lightbulb
+                className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-deep"
+                aria-hidden="true"
               />
-            ))}
-          </div>
-        </section>
+              <div>
+                <p className="font-body text-sm font-bold text-navy">
+                  Toque Regional
+                </p>
+                <p className="font-body text-sm text-ink-2">
+                  Empresas locais valorizam a entrega fisica. Esta versao foi
+                  otimizada para legibilidade em papel e economia de tinta.
+                </p>
+              </div>
+            </aside>
 
-        {/* Insight regional */}
-        <aside className="mb-8 flex gap-3 rounded-r-lg border-l-4 border-gold-deep bg-gold/10 p-4">
-          <Lightbulb
-            className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-deep"
-            aria-hidden="true"
-          />
-          <div>
-            <p className="font-body text-sm font-bold text-navy">
-              Toque Regional
-            </p>
-            <p className="font-body text-sm text-ink-2">
-              Empresas locais valorizam a entrega fisica. Esta versao foi
-              otimizada para legibilidade em papel e economia de tinta.
-            </p>
+            {/* Acoes — desktop (sob os controles) */}
+            <div className="hidden flex-col gap-3 md:flex">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="btn btn-primary flex h-14 w-full items-center justify-center gap-2 rounded-xl font-bold shadow-lg"
+              >
+                <FileText className="h-5 w-5" aria-hidden="true" />
+                Baixar PDF
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary h-12 w-full rounded-xl border border-line/30"
+              >
+                Editar curriculo
+              </button>
+            </div>
           </div>
-        </aside>
 
-        {/* Canvas A4 */}
-        <article
+          {/* ============ CANVAS A4 (direita no desktop) ============ */}
+          <div className="mx-auto w-full max-w-[560px] md:mx-0 md:flex-1">
+            <article
           className="cv-page relative flex w-full flex-col overflow-hidden rounded-sm border border-line/40 p-8 shadow-xl"
           style={{
             aspectRatio: "1 / 1.41",
@@ -299,24 +330,26 @@ export default function CandidatoCurriculoPage() {
               Gerado em {dataGeracao}
             </span>
           </footer>
-        </article>
+            </article>
 
-        {/* Action area */}
-        <div className="mt-8 flex flex-col gap-4">
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="btn btn-primary flex h-14 w-full items-center justify-center gap-2 rounded-xl font-bold shadow-lg"
-          >
-            <FileText className="h-5 w-5" aria-hidden="true" />
-            Baixar PDF
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary h-12 w-full rounded-xl border border-line/30"
-          >
-            Editar curriculo
-          </button>
+            {/* Acoes — mobile (sob o canvas) */}
+            <div className="mt-8 flex flex-col gap-4 md:hidden">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="btn btn-primary flex h-14 w-full items-center justify-center gap-2 rounded-xl font-bold shadow-lg"
+              >
+                <FileText className="h-5 w-5" aria-hidden="true" />
+                Baixar PDF
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary h-12 w-full rounded-xl border border-line/30"
+              >
+                Editar curriculo
+              </button>
+            </div>
+          </div>
         </div>
       </main>
     </CandidatoLayout>
